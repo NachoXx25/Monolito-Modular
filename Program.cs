@@ -23,6 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 //Añadir alcance de los servicios
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
@@ -63,9 +64,6 @@ builder.Services.AddAuthentication( options => {
     };
 });
 
-
-
-
 //Configuración de identity
 builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
@@ -88,10 +86,13 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 var app = builder.Build();
+
+//Llamado al dataseeder
 using (var scope = app.Services.CreateScope())
 {
     await DataSeeder.Initialize(scope.ServiceProvider);
 }
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -99,7 +100,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseSwagger();
 }
-
 
 app.UseHttpsRedirection();
 app.UseSwaggerUI();
