@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monolito_Modular.Application.Services.Interfaces;
+using Monolito_Modular.Domain.UserModels;
 
 namespace Monolito_Modular.Api.Controllers
 {
@@ -21,14 +22,14 @@ namespace Monolito_Modular.Api.Controllers
         /// <param name="Id">Id del usuario.</param>
         /// <returns>Los datos del usuario</returns> 
         [HttpGet("usuarios/{Id}")]
-        [Authorize( Roles = "Administrador")]
+        [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> GetUserById(int Id)
         {
             try{
                 return Ok(await _userService.GetUserById(Id));
             }catch(Exception ex)
             {
-                return  NotFound(new { Error = ex.Message});
+                return NotFound(new { Error = ex.Message});
             }
         }
 
@@ -61,18 +62,19 @@ namespace Monolito_Modular.Api.Controllers
                 return BadRequest( new { Error = ex.Message});
             }
         }
-
+        */
         [HttpDelete("usuarios/{Id}")]
-        public async Task<IActionResult> DeleteUser()
+        [Authorize( Roles = "Administrador" )]
+        public async Task<IActionResult> DeleteUser(int Id)
         {
             try
             {
-                throw new NotImplementedException();
+                await _userService.DeleteUser(Id);
+                return NoContent();
             }catch(Exception ex)
             {
-                return BadRequest( new { Error = ex.Message});
+                return BadRequest( new { Error = ex.Message });
             }
         }
-        */
     }
 }

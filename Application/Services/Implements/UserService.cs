@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
+using Monolito_Modular.Infrastructure.Repositories.Interfaces;
 
 namespace Monolito_Modular.Application.Services.Implements
 {
@@ -10,12 +11,15 @@ namespace Monolito_Modular.Application.Services.Implements
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager)
+        public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, IUserRepository userRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _userRepository = userRepository;
         }
+
         /// <summary>
         /// Obtiene los datos de un usuario según su Id
         /// </summary>
@@ -35,5 +39,15 @@ namespace Monolito_Modular.Application.Services.Implements
             };
             return userDTO;
         }  
+
+        /// <summary>
+        /// Hace un borrado lógico del usuario.
+        /// </summary>
+        /// <param name="Id">Id del usuario.</param>
+        public async Task DeleteUser(int Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString()) ?? throw new Exception("El usuario especificado no existe.");
+            await _userRepository.DeleteUser(user);
+        }
     }
 }

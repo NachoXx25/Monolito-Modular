@@ -9,6 +9,8 @@ using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
 using Monolito_Modular.Infrastructure.Data;
 using Monolito_Modular.Infrastructure.Data.DataSeeders;
+using Monolito_Modular.Infrastructure.Repositories.Implements;
+using Monolito_Modular.Infrastructure.Repositories.Interfaces;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,10 @@ builder.Services.AddEndpointsApiExplorer();
 //Añadir alcance de los servicios
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+//Añadir alcance de los repositorios
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
