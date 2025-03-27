@@ -1,8 +1,9 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Monolito_Modular.Domain.MySQLModels;
+using Monolito_Modular.Domain.UserModels;
 using Monolito_Modular.Infrastructure.Data;
+using Monolito_Modular.Infrastructure.Data.DataSeeders;
 
 Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<AuthContext>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
@@ -39,7 +40,10 @@ builder.Services.AddDbContext<UserContext>(options =>
 
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    await DataSeeder.Initialize(scope.ServiceProvider);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

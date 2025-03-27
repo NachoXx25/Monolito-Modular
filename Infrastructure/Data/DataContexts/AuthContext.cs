@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Monolito_Modular.Domain.MySQLModels;
+using Monolito_Modular.Domain.UserModels;
 
 namespace Monolito_Modular.Infrastructure.Data
 {
