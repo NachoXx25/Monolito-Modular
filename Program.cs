@@ -1,6 +1,8 @@
 using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Monolito_Modular.Application.Services.Implements;
+using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
 using Monolito_Modular.Infrastructure.Data;
 using Monolito_Modular.Infrastructure.Data.DataSeeders;
@@ -16,6 +18,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 
+//Añadir alcance de los servicios
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
