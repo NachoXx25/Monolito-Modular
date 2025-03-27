@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Monolito-Modular")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f9d156fd7c3a33e9abd4af9229a28224e0d5bbd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4404ee51f248109b69cf29a30567b42507cce5f4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Monolito-Modular")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Monolito-Modular")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

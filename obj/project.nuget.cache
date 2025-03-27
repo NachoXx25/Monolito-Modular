@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "yvSbOq0OPKk=",
+  "dgSpecHash": "h9xPuY5qd7M=",
   "success": true,
   "projectFilePath": "C:\\Users\\TheNachoXx\\Desktop\\Arquitectura de Sistemas\\Monolito-Modular\\Monolito-Modular.csproj",
   "expectedPackageFiles": [
@@ -75,11 +75,11 @@
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\mongodb.entityframeworkcore\\8.2.3\\mongodb.entityframeworkcore.8.2.3.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\mysql.data\\9.2.0\\mysql.data.9.2.0.nupkg.sha512",
-    "C:\\Users\\TheNachoXx\\.nuget\\packages\\mysqlconnector\\2.3.5\\mysqlconnector.2.3.5.nupkg.sha512",
+    "C:\\Users\\TheNachoXx\\.nuget\\packages\\mysqlconnector\\2.4.0\\mysqlconnector.2.4.0.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
-    "C:\\Users\\TheNachoXx\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
-    "C:\\Users\\TheNachoXx\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
-    "C:\\Users\\TheNachoXx\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\8.0.3\\pomelo.entityframeworkcore.mysql.8.0.3.nupkg.sha512",
+    "C:\\Users\\TheNachoXx\\.nuget\\packages\\npgsql\\9.0.2\\npgsql.9.0.2.nupkg.sha512",
+    "C:\\Users\\TheNachoXx\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.3\\npgsql.entityframeworkcore.postgresql.9.0.3.nupkg.sha512",
+    "C:\\Users\\TheNachoXx\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\9.0.0-preview.2.efcore.9.0.0\\pomelo.entityframeworkcore.mysql.9.0.0-preview.2.efcore.9.0.0.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.24-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
@@ -197,16 +197,5 @@
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\TheNachoXx\\.nuget\\packages\\zstdsharp.port\\0.8.0\\zstdsharp.port.0.8.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Se detectó una versión del paquete fuera de la restricción de dependencia: Pomelo.EntityFrameworkCore.MySql 8.0.3 requiere Microsoft.EntityFrameworkCore.Relational (>= 8.0.13 && <= 8.0.999), pero la versión Microsoft.EntityFrameworkCore.Relational 9.0.3 ya se resolvió.",
-      "libraryId": "Microsoft.EntityFrameworkCore.Relational",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    }
-  ]
+  "logs": []
 }
