@@ -1,6 +1,9 @@
+using System.Text;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Monolito_Modular.Application.Services.Implements;
 using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
@@ -16,7 +19,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
+
 
 //Añadir alcance de los servicios
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -42,6 +45,47 @@ builder.Services.AddDbContextPool<AuthContext>(options =>
 builder.Services.AddDbContext<UserContext>(options => 
     options.UseNpgsql(Env.GetString("POSTGRESQL_CONNECTION")));
 
+//Configuración de middleware de autenticación
+builder.Services.AddAuthentication( options => {
+
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer( options => {
+
+    options.TokenValidationParameters = new TokenValidationParameters (){
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Env.GetString("JWT_SECRET"))),
+        ValidateLifetime = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero 
+    };
+});
+
+
+
+
+//Configuración de identity
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    //Configuración de contraseña
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+
+    //Configuración de Email
+    options.User.RequireUniqueEmail = true;
+
+    //Configuración de UserName 
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+
+    //Configuración de retrys
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+});
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
