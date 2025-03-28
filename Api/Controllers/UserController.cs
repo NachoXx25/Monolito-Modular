@@ -32,13 +32,13 @@ namespace Monolito_Modular.Api.Controllers
                 return NotFound(new { Error = ex.Message});
             }
         }
-
+        /*
         [HttpGet("usuarios")]
         public Task<IActionResult> GetAllUsers()
         {
             throw new NotImplementedException();
         }
-        /*
+        
         [HttpPost("usuarios")]
         public async Task<IActionResult> CreateUser()
         {

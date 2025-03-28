@@ -9,11 +9,11 @@ using Monolito_Modular.Infrastructure.Data;
 
 #nullable disable
 
-namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
+namespace Monolito_Modular.Migrations
 {
-    [DbContext(typeof(AuthContext))]
-    [Migration("20250327184514_RoleSeeders")]
-    partial class RoleSeeders
+    [DbContext(typeof(UserContext))]
+    [Migration("20250328010659_InitialUserMigration")]
+    partial class InitialUserMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

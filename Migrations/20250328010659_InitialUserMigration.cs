@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
+namespace Monolito_Modular.Migrations
 {
     /// <inheritdoc />
-    public partial class RoleSeeders : Migration
+    public partial class InitialUserMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

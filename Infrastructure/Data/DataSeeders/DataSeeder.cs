@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Monolito_Modular.Domain.UserModels;
+using MySql.Data.MySqlClient;
+using Npgsql;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 {
@@ -21,8 +23,19 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
                 try
                 {
-                    await userContext.Database.MigrateAsync();
-                    await authContext.Database.MigrateAsync();
+                     try {
+                        await userContext.Database.MigrateAsync();
+                    }
+                        catch (PostgresException ex) when (ex.SqlState == "42P07") {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos PostgreSQL: {Message}", ex.Message);
+                    }
+                    
+                    try {
+                        await authContext.Database.MigrateAsync();
+                    }
+                        catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
+                    }
                     var roles = new[] { "Administrador", "Cliente" };
                     foreach(var roleName in roles)
                     {

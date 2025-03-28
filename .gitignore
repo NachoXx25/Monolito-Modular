@@ -490,3 +490,5 @@ $RECYCLE.BIN/
 
 # App settings
 appsettings.json
+obj/Debug/net9.0/Monolito-Modular.AssemblyInfoInputs.cache
+obj/Debug/net9.0/Monolito-Modular.AssemblyInfo.cs

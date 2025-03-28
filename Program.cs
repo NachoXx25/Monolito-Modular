@@ -33,7 +33,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
-builder.Services.AddDbContextPool<AuthContext>(options =>
+builder.Services.AddDbContextPool<UserContext>(options =>
 {
     options.UseMySql(Env.GetString("MYSQL_CONNECTION"), serverVersion,
         mySqlOptions => 
@@ -44,12 +44,12 @@ builder.Services.AddDbContextPool<AuthContext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(30), 
                 errorNumbersToAdd: null
             );
-            mySqlOptions.MigrationsAssembly(typeof(AuthContext).Assembly.FullName);
+            mySqlOptions.MigrationsAssembly(typeof(UserContext).Assembly.FullName);
         });
 }, poolSize: 200);
 
 //Conexión a base de datos de módulo de autenticación (PostgreSQL)
-builder.Services.AddDbContext<UserContext>(options => 
+builder.Services.AddDbContext<AuthContext>(options => 
     options.UseNpgsql(Env.GetString("POSTGRESQL_CONNECTION")));
 
 //Configuración de middleware de autenticación
