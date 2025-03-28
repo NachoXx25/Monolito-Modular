@@ -8,6 +8,7 @@ using Monolito_Modular.Application.Services.Implements;
 using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
 using Monolito_Modular.Infrastructure.Data;
+using Monolito_Modular.Infrastructure.Data.DataContexts;
 using Monolito_Modular.Infrastructure.Data.DataSeeders;
 using Monolito_Modular.Infrastructure.Repositories.Implements;
 using Monolito_Modular.Infrastructure.Repositories.Interfaces;
@@ -51,6 +52,14 @@ builder.Services.AddDbContextPool<AuthContext>(options =>
 //Conexión a base de datos de módulo de autenticación (PostgreSQL)
 builder.Services.AddDbContext<UserContext>(options => 
     options.UseNpgsql(Env.GetString("POSTGRESQL_CONNECTION")));
+
+//Conexión a base de datos de módulo de facturas (MariaDB)
+builder.Services.AddDbContext<BillContext>(options => 
+    options.UseMySql(Env.GetString("MARIADB_CONNECTION"),serverVersion));
+
+//Conexión a base de datos de módulo de videos (MongoDB)
+builder.Services.AddDbContext<VideoContext>(options => 
+    options.UseMongoDB(Env.GetString("MONGODB_CONNECTION"),Env.GetString("MONGODB_DATABASE_NAME")));
 
 //Configuración de middleware de autenticación
 builder.Services.AddAuthentication( options => {
