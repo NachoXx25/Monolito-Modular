@@ -10,12 +10,14 @@ namespace Monolito_Modular.Domain.BillModel
         public int Id { get; set; }
 
         public required int AmountToPay { get; set; }
+
+        public required bool IsDeleted { get; set; } = false;
+
+        public required DateTime PaymentDate { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
         
         public required int StatusId { get; set; }
 
         public required Status Status { get; set; }
-        
-        public required DateTime PaymentDate { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
         
         public required DateTime CreatedAt { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
     }

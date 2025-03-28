@@ -17,6 +17,6 @@ namespace Monolito_Modular.Domain.VideoModel
 
         public required string Genre { get; set; }
 
-        public required bool IsDeleted { get; set; }
+        public required bool IsDeleted { get; set; }  = false;
     }
 }
