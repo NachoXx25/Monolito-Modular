@@ -24,7 +24,7 @@ namespace Monolito_Modular.Api.Controllers
         /// <param name="Id">Id del usuario.</param>
         /// <returns>Los datos del usuario</returns> 
         [HttpGet("usuarios/{Id}")]
-        //[Authorize( Roles = "Administrador" )]
+        [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> GetUserById(int Id)
         {
             try{
@@ -36,11 +36,17 @@ namespace Monolito_Modular.Api.Controllers
         }
         
         [HttpGet("usuarios")]
+        //[Authorize (Roles = "Administrador" )]
         public Task<IActionResult> GetAllUsers()
         {
             throw new NotImplementedException();
         }
         
+        /// <summary>
+        /// Endpoint para crear un nuevo usuario.
+        /// </summary>
+        /// <param name="userDTO">Datos del usuario.</param>
+        /// <returns>Ok en caso de exito o bad request en caso de errror.</returns>
         [HttpPost("usuarios")]
         public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
         {
@@ -78,7 +84,7 @@ namespace Monolito_Modular.Api.Controllers
         }
         */
         [HttpDelete("usuarios/{Id}")]
-        //[Authorize( Roles = "Administrador" )]
+        [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             try

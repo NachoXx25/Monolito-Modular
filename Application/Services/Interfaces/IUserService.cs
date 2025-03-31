@@ -23,5 +23,11 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// </summary>
         /// <param name="Id">Id del usuario.</param>
         Task DeleteUser(int Id);
+
+        /// <summary>
+        /// Obtiene todos los usuarios.
+        /// </summary>
+        /// <returns>Lista de usuarios</returns>
+        Task<IEnumerable<ReturnUserDTO>> GetAllUsers();
     }
 }

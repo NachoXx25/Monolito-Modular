@@ -114,15 +114,23 @@ namespace Monolito_Modular.Application.Services.Implements
             }
         }
 
-        public static string ReturnUserName(CreateUserDTO user)
-        {
-            return new string($"{user.FirstName}{user.LastName}".Where(c => char.IsLetterOrDigit(c)).ToArray());
-        }
-        
-
+        /// <summary>
+        /// Metodo para traducir los errores de Identity a español.	
+        /// </summary>
+        /// <param name="error"> Errores de identity</param>
+        /// <returns>Errores de identity en español.</returns>
         public static string TranslateError(IdentityError error)
         {
             return ErrorTranslations.TryGetValue(error.Code, out string? translation) ? translation : error.Description;
+        }
+
+        /// <summary>
+        /// Obtiene todos los usuarios.
+        /// </summary>
+        /// <returns>Lista de usuarios</returns>
+        public Task<IEnumerable<ReturnUserDTO>> GetAllUsers()
+        {
+            throw new NotImplementedException();
         }
     }
 }
