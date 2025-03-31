@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Monolito_Modular.Domain.BillModel;
 using Monolito_Modular.Domain.UserModels;
 using MySql.Data.MySqlClient;
 using Npgsql;
+using Monolito_Modular.Infrastructure.Data.DataContexts;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 {
@@ -18,6 +20,7 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
             {
                 var userContext = scope.ServiceProvider.GetRequiredService<UserContext>();
                 var authContext = scope.ServiceProvider.GetRequiredService<AuthContext>();
+                var billContext = scope.ServiceProvider.GetRequiredService<BillContext>();
 
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<DataSeeder>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
@@ -57,6 +60,16 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                         }
                     }
                 
+                    var statuses = new[] { "Pendiente", "Pagado", "Vencido" };
+                    
+                    if(!await billContext.Statuses.AnyAsync())
+                    {
+                        foreach(var status in statuses)
+                        {
+                            billContext.Statuses.Add(new Status { Name = status });
+                        }
+                        await billContext.SaveChangesAsync();
+                    }
                 }
                 catch(Exception ex)
                 {
