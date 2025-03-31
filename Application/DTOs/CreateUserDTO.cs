@@ -11,7 +11,7 @@ namespace Monolito_Modular.Application.DTOs
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s\-]+$", ErrorMessage = "El Apellido solo puede contener carácteres del abecedario español.")]
         [MinLength(2, ErrorMessage ="El apellido debe tener mínimo 2 letras.")]
         [MaxLength(20, ErrorMessage ="El apellido debe tener máximo 20 letras.")]
-        public required string LastNameName { get; set; }
+        public required string LastName { get; set; }
         [Required(ErrorMessage = "El email es requerido")]
         [RegularExpression (@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "El Correo electrónico no es válido.")]
         public required string Email { get; set; }

@@ -1,12 +1,14 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.UserModels;
 
 namespace Monolito_Modular.Api.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -22,7 +24,7 @@ namespace Monolito_Modular.Api.Controllers
         /// <param name="Id">Id del usuario.</param>
         /// <returns>Los datos del usuario</returns> 
         [HttpGet("usuarios/{Id}")]
-        [Authorize( Roles = "Administrador" )]
+        //[Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> GetUserById(int Id)
         {
             try{
@@ -32,7 +34,7 @@ namespace Monolito_Modular.Api.Controllers
                 return NotFound(new { Error = ex.Message});
             }
         }
-        /*
+        
         [HttpGet("usuarios")]
         public Task<IActionResult> GetAllUsers()
         {
@@ -40,17 +42,29 @@ namespace Monolito_Modular.Api.Controllers
         }
         
         [HttpPost("usuarios")]
-        public async Task<IActionResult> CreateUser()
+        public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
         {
             try
             {
-                throw new NotImplementedException();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                /*
+                var userRoleClaim = User.FindFirstValue(ClaimTypes.Role);
+                if (userRoleClaim != "Administrador" && userDTO.Role == "Administrador")
+                {
+                    return Forbid("No tienes permisos para crear usuarios administradores.");
+                }
+                */
+                var user = await _userService.CreateUser(userDTO);
+                return Ok(user);
             }catch(Exception ex)
             {
                 return BadRequest( new { Error = ex.Message});
             }
         }
-
+        /*
         [HttpPatch("usuarios/{Id}")]
         public async Task<IActionResult> UpdateUser()
         {
@@ -64,7 +78,7 @@ namespace Monolito_Modular.Api.Controllers
         }
         */
         [HttpDelete("usuarios/{Id}")]
-        [Authorize( Roles = "Administrador" )]
+        //[Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             try

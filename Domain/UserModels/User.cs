@@ -11,7 +11,7 @@ namespace Monolito_Modular.Domain.UserModels
         public required string FirstName { get; set; }  
         public required string LastName { get; set; }  
         public required int RoleId { get; set; }  
-        public required Role Role { get; set; }  
+        public Role Role { get; set; }  = null!;
         public required bool Status { get; set; }  
         public required DateTime CreatedAt { get; set; }  = DateTime.UtcNow;
         public required DateTime UpdatedAt { get; set; }  = DateTime.UtcNow;
