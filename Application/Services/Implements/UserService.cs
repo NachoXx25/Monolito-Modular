@@ -142,10 +142,34 @@ namespace Monolito_Modular.Application.Services.Implements
         /// <summary>
         /// Obtiene todos los usuarios.
         /// </summary>
+        /// <param name="search">Parametros de busqueda</param>
         /// <returns>Lista de usuarios</returns>
-        public Task<IEnumerable<ReturnUserDTO>> GetAllUsers()
+        public async Task<IEnumerable<UserDTO>> GetAllUsers(SearchByDTO search)
         {
-            throw new NotImplementedException();
+            var users = _userManager.Users.AsQueryable();
+            if(!string.IsNullOrWhiteSpace(search.FirstName))
+            {
+                users = users.Where(x => x.FirstName.ToLower().Contains(search.FirstName.ToLower()));
+            }
+            if(!string.IsNullOrWhiteSpace(search.LastName))
+            {
+                users = users.Where(x => x.LastName.ToLower().Contains(search.LastName.ToLower()));
+            }
+            if(!string.IsNullOrWhiteSpace(search.Email))
+            {
+                users = users.Where(x => x.Email != null && x.Email.ToLower().Contains(search.Email.ToLower()));
+            }
+            if(users.Count() == 0) throw new Exception("No se encontraron usuarios con los parámetros de búsqueda especificados.");
+            var pacificTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time");
+            return await users.Where( u => u.Status == true).Select(user => new UserDTO()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                Role = user.Role.Name ?? string.Empty,
+                CreatedAt = TimeZoneInfo.ConvertTime(user.CreatedAt, pacificTimeZone)
+            }).ToListAsync();
         }
 
         /// <summary>

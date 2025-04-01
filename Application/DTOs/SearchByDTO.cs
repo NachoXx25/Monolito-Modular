@@ -8,7 +8,7 @@ namespace Monolito_Modular.Application.DTOs
     public class SearchByDTO
     {
         public string? FirstName { get; set; }
-        public string? LastNameName { get; set; }
+        public string? LastName { get; set; }
         public string? Email { get; set; }
     }
 }

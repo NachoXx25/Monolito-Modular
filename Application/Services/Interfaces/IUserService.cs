@@ -8,8 +8,9 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// <summary>
         /// Obtiene todos los usuarios.
         /// </summary>
+        /// <param name="search">Parámetros de búsqueda</param>
         /// <returns>Lista de usuarios</returns>
-        Task<IEnumerable<ReturnUserDTO>> GetAllUsers();
+        Task<IEnumerable<UserDTO>> GetAllUsers(SearchByDTO search);
 
         /// <summary>
         /// Obtiene los datos de un usuario según su Id

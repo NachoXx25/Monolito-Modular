@@ -14,6 +14,12 @@ namespace Monolito_Modular.Api.Controllers
         {
             _authService = authService;
         }
+
+        /// <summary>
+        /// Endpoint para iniciar sesión.
+        /// </summary>
+        /// <param name="login">Credenciales del usuario.</param>
+        /// <returns>Token y datos del usuario o error.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO login)
         {
@@ -29,6 +35,13 @@ namespace Monolito_Modular.Api.Controllers
                 return BadRequest(new { Error = ex.Message});
             }
         }
+
+        /// <summary>
+        /// Endpoint para cambiar la contraseña de un usuario.
+        /// </summary>
+        /// <param name="updatePasswordDTO">Datos de la nueva contraseña.</param>
+        /// <param name="Id">Id del usuario.</param>
+        /// <returns>Mensaje de éxito o error.</returns>
         [HttpPatch("usuarios/{Id}")]
         [Authorize]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordDTO updatePasswordDTO, int Id)

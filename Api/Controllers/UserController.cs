@@ -18,12 +18,34 @@ namespace Monolito_Modular.Api.Controllers
         }
 
         /// <summary>
+        /// Obtiene todos los usuarios.
+        /// </summary>
+        /// <param name="search">Filtro de busqueda.</param>
+        /// <returns>Lista de usuarios.</returns>
+        [HttpGet("usuarios")]
+        [Authorize (Roles = "Administrador" )]
+        public async Task<IActionResult> GetAllUsers([FromQuery] SearchByDTO search)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return Ok(await _userService.GetAllUsers(search));
+            }catch(Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message});
+            }
+        }
+
+        /// <summary>
         /// Obtiene los datos de un usuario en función de su Id
         /// </summary>
         /// <param name="Id">Id del usuario.</param>
         /// <returns>Los datos del usuario</returns> 
         [HttpGet("usuarios/{Id}")]
-        //[Authorize( Roles = "Administrador" )]
+        [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> GetUserById(int Id)
         {
             try{
@@ -32,13 +54,6 @@ namespace Monolito_Modular.Api.Controllers
             {
                 return NotFound(new { Error = ex.Message});
             }
-        }
-        
-        [HttpGet("usuarios")]
-        [Authorize (Roles = "Administrador" )]
-        public Task<IActionResult> GetAllUsers()
-        {
-            throw new NotImplementedException();
         }
         
         /// <summary>
