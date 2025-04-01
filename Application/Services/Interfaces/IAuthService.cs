@@ -12,7 +12,7 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// Login a un usuario en el sistema.
         /// </summary>
         /// <param name="login">Datos de login del usuario.</param>
-        /// <returns>Token de acceso.</returns> 
-        Task<string> Login(LoginDTO login);
+        /// <returns>Los datos del usuario.</returns>  
+        Task<ReturnUserDTO> Login(LoginDTO login);
     }
 }

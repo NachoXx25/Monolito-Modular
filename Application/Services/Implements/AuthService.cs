@@ -26,11 +26,11 @@ namespace Monolito_Modular.Application.Services.Implements
         /// Login a un usuario en el sistema.
         /// </summary>
         /// <param name="login">Datos de login del usuario.</param>
-        /// <returns>Token de acceso.</returns> 
-        public async Task<string> Login(LoginDTO login)
+        /// <returns>Los datos del usuario.</returns> 
+        public async Task<ReturnUserDTO> Login(LoginDTO login)
         {
             var user = await _userManager.FindByEmailAsync(login.Email) ?? throw new Exception("Usuario o contraseña incorrectos.");
-
+            if(!user.Status) throw new Exception("Su cuenta ha sido inhabilitada, no puede iniciar sesión.");
             var result = await _userManager.CheckPasswordAsync(user, login.Password);
 
             if(!result){
@@ -48,7 +48,20 @@ namespace Monolito_Modular.Application.Services.Implements
             var role = await _roleManager.FindByIdAsync(user.RoleId.ToString()) ?? throw new Exception("No se ha encontrado el rol del usuario.");
             await _userManager.ResetAccessFailedCountAsync(user);
             var token = await _tokenService.CreateToken(user, role);
-            return token;
+            var ReturnUserDTO = new ReturnUserDTO(){
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                RoleName = role.Name ?? string.Empty,
+                CreatedAt = TimeZoneInfo.ConvertTime(user.CreatedAt, 
+                            TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
+                        UpdatedAt = TimeZoneInfo.ConvertTime(user.UpdatedAt, 
+                            TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
+                        IsActive = user.Status,
+                Token = token
+            };
+            return ReturnUserDTO;
         }
     }
 }

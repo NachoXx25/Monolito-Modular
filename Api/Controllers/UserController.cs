@@ -96,6 +96,10 @@ namespace Monolito_Modular.Api.Controllers
         {
             try
             {
+                var userIdClaim = User.FindFirst("Id")?.Value;
+                if(userIdClaim == Id.ToString()){
+                    throw new Exception("No puedes eliminarte a ti mismo.");
+                }
                 await _userService.DeleteUser(Id);
                 return NoContent();
             }catch(Exception ex)
