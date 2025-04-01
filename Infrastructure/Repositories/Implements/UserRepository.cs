@@ -136,6 +136,8 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
             {
                 billUser.LastName = updateUser.LastName;
             }
+            authUser.UpdatedAt = DateTime.UtcNow;
+            billUser.UpdatedAt = DateTime.UtcNow;
             _authContext.Users.Update(authUser);
             await _authContext.SaveChangesAsync();
             _billContext.Users.Update(billUser);

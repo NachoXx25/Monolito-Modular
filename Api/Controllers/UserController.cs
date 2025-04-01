@@ -47,6 +47,7 @@ namespace Monolito_Modular.Api.Controllers
         /// <param name="userDTO">Datos del usuario.</param>
         /// <returns>Ok en caso de exito o bad request en caso de errror.</returns>
         [HttpPost("usuarios")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
         {
             try
@@ -54,14 +55,19 @@ namespace Monolito_Modular.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
-                }
-                /*
-                var userRoleClaim = User.FindFirstValue(ClaimTypes.Role);
-                if (userRoleClaim != "Administrador" && userDTO.Role == "Administrador")
+                }         
+                if (userDTO.Role?.ToLower() == "administrador")
                 {
-                    return Forbid("No tienes permisos para crear usuarios administradores.");
-                }
-                */
+                    if (!User.Identity?.IsAuthenticated == true)
+                    {
+                        return Unauthorized(new { Error = "Se requiere autenticación para crear usuarios administradores." });
+                    }
+                    
+                    if (!User.IsInRole("Administrador"))
+                    {
+                        throw new Exception("No tienes permisos para crear usuarios administradores.");
+                    }
+                }       
                 var user = await _userService.CreateUser(userDTO);
                 return Ok(user);
             }catch(Exception ex)

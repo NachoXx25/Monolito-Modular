@@ -27,7 +27,7 @@ namespace Monolito_Modular.Application.Services.Implements
         /// </summary>
         /// <param name="login">Datos de login del usuario.</param>
         /// <returns>Los datos del usuario.</returns> 
-        public async Task<ReturnUserDTO> Login(LoginDTO login)
+        public async Task<ReturnUserDTOWithToken> Login(LoginDTO login)
         {
             var user = await _userManager.FindByEmailAsync(login.Email) ?? throw new Exception("Usuario o contraseña incorrectos.");
             if(!user.Status) throw new Exception("Su cuenta ha sido inhabilitada, no puede iniciar sesión.");
@@ -48,7 +48,7 @@ namespace Monolito_Modular.Application.Services.Implements
             var role = await _roleManager.FindByIdAsync(user.RoleId.ToString()) ?? throw new Exception("No se ha encontrado el rol del usuario.");
             await _userManager.ResetAccessFailedCountAsync(user);
             var token = await _tokenService.CreateToken(user, role);
-            var ReturnUserDTO = new ReturnUserDTO(){
+            var ReturnUserDTO = new ReturnUserDTOWithToken(){
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

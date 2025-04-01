@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace Monolito_Modular.Application.DTOs
 {
-    public class ReturnUserDTO
+    public class ReturnUserDTOWithToken
     {
         public int Id { get; set; }
         public string FirstName { get; set; } = string.Empty;
@@ -10,5 +15,6 @@ namespace Monolito_Modular.Application.DTOs
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; } 
         public bool IsActive { get; set; } = true;
+        public string? Token { get; set; }
     }
 }
