@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Monolito_Modular.Domain.BillModel;
 using Monolito_Modular.Domain.UserModels;
+using MySql.Data.MySqlClient;
+using Npgsql;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
@@ -24,9 +26,25 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
                 try
                 {
-                    await userContext.Database.MigrateAsync();
-                    await authContext.Database.MigrateAsync();
-                    await billContext.Database.MigrateAsync();
+                    try {
+                        await userContext.Database.MigrateAsync();
+                    }
+                        catch (PostgresException ex) when (ex.SqlState == "42P07") {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos PostgreSQL: {Message}", ex.Message);
+                    }
+                    
+                    try {
+                        await authContext.Database.MigrateAsync();
+                    }
+                        catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
+                    }
+                    try {
+                        await billContext.Database.MigrateAsync();
+                    }
+                        catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
+                    }
                     var roles = new[] { "Administrador", "Cliente" };
                     foreach(var roleName in roles)
                     {
@@ -41,8 +59,14 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                                 var existsInAuthContext = await authContext.Roles.AnyAsync( r => r.Name == roleName);
                                 if(!existsInAuthContext)
                                 {
-                                    authContext.Roles.Add(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
+                                    await authContext.Roles.AddAsync(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
                                     await authContext.SaveChangesAsync();
+                                }
+                                var existsInBillContext = await billContext.Roles.AnyAsync( r => r.Name == roleName);
+                                if(!existsInBillContext)
+                                {
+                                    await billContext.Roles.AddAsync(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
+                                    await billContext.SaveChangesAsync();
                                 }
                             }
                         }

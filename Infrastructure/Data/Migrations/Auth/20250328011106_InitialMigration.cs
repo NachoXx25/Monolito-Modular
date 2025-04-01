@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Monolito_Modular.Infrastructure.Data.Migrations.User
+namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
 {
     /// <inheritdoc />
-    public partial class RoleSeeders : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

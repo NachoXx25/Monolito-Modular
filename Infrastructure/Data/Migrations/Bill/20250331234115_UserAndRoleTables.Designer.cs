@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Monolito_Modular.Infrastructure.Data;
+using Monolito_Modular.Infrastructure.Data.DataContexts;
 
 #nullable disable
 
-namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
+namespace Monolito_Modular.Infrastructure.Data.Migrations.Bill
 {
-    [DbContext(typeof(AuthContext))]
-    [Migration("20250327184514_RoleSeeders")]
-    partial class RoleSeeders
+    [DbContext(typeof(BillContext))]
+    [Migration("20250331234115_UserAndRoleTables")]
+    partial class UserAndRoleTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,6 +126,58 @@ namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Monolito_Modular.Domain.BillModel.Bill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AmountToPay")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("Monolito_Modular.Domain.BillModel.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Monolito_Modular.Domain.UserModels.Role", b =>
@@ -295,6 +347,25 @@ namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Monolito_Modular.Domain.BillModel.Bill", b =>
+                {
+                    b.HasOne("Monolito_Modular.Domain.BillModel.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Monolito_Modular.Domain.UserModels.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Status");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Monolito_Modular.Domain.UserModels.User", b =>

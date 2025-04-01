@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "a246b03b-5fb8-4c75-87ea-1b42d5f7c7bd",
+		"name": "Monolito Modular",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33657530"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get User By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIiLCJFbWFpbCI6IngueEBnbWFpbC5jb20iLCJOaWNrTmFtZSI6Ik5hc2Nob1h4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRnJlZSIsImV4cCI6MTc0MzA4NTA1MX0.bqC7FDXmUAFUdHmbMyVvIAP9m_hxhyGl3dFj7Hwv3Dk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuarios/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"ojZYKnxYn\",\r\n  \"lastName\": \"NKcAvrPSanTYCYAXrfjQ\",\r\n  \"email\": \"3RRAllCKgO1OdH-K_MXKjEzh3RVLkaAd3e0eBqHPrY+zb7M_NX-0j9zu++3C6x6OLdaMGNRWEWC10RC7bx@q6wIaurv9p.2o9hFcMxc1b0RnKsZVwSC3Cydh5Jt0hJRUEtRrP6e3y0Mc3uLcgORjA6LRfdds9.MkTsPSqsetCfYJbSMUxWCkpeUb\",\r\n  \"password\": \"ulnUSlbsZVHQn6Jp6BMH\",\r\n  \"confirmPassword\": \"string\",\r\n  \"role\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/usuarios/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:5024",
+			"type": "string"
+		}
+	]
+}

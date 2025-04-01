@@ -22,7 +22,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 
 //Añadir alcance de los servicios
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -34,23 +34,17 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
-builder.Services.AddDbContextPool<AuthContext>(options =>
+builder.Services.AddDbContextPool<UserContext>(options =>
 {
     options.UseMySql(Env.GetString("MYSQL_CONNECTION"), serverVersion,
         mySqlOptions => 
         {
-            mySqlOptions.EnableRetryOnFailure
-            (
-                maxRetryCount: 5,                
-                maxRetryDelay: TimeSpan.FromSeconds(30), 
-                errorNumbersToAdd: null
-            );
-            mySqlOptions.MigrationsAssembly(typeof(AuthContext).Assembly.FullName);
+            mySqlOptions.MigrationsAssembly(typeof(UserContext).Assembly.FullName);
         });
 }, poolSize: 200);
 
 //Conexión a base de datos de módulo de autenticación (PostgreSQL)
-builder.Services.AddDbContext<UserContext>(options => 
+builder.Services.AddDbContext<AuthContext>(options => 
     options.UseNpgsql(Env.GetString("POSTGRESQL_CONNECTION")));
 
 //Conexión a base de datos de módulo de facturas (MariaDB)
@@ -80,7 +74,6 @@ builder.Services.AddAuthentication( options => {
 });
 
 //Configuración de identity
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
 {
     //Configuración de contraseña
@@ -92,14 +85,13 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 
     //Configuración de UserName 
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnñpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
 
     //Configuración de retrys
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
 });
-
 var app = builder.Build();
 
 //Llamado al dataseeder
