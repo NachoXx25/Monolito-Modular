@@ -70,7 +70,7 @@ namespace Monolito_Modular.Application.Services.Implements
         {
             try
             {
-                var guid = new Guid();
+                var guid = Guid.NewGuid();
                 var role = await _roleManager.FindByNameAsync(userDTO.Role) ?? 
                     throw new Exception("El rol especificado no existe.");
                 var user = new User(){
@@ -87,7 +87,22 @@ namespace Monolito_Modular.Application.Services.Implements
                 
                 if (result.Succeeded)
                 {
-                    await _userRepository.CreateUserInAuthContext(userDTO);
+                    var userInOtherContexts = new CreateUsersInOtherContextsDTO()
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email ?? string.Empty,
+                        Password = userDTO.Password,
+                        ConfirmPassword = userDTO.Password,
+                        Role = role.Name ?? string.Empty,
+                        CreatedAt = user.CreatedAt,
+                        UpdatedAt = user.UpdatedAt,
+                        Status = user.Status,
+                        Guid = guid.ToString()
+                    };
+                    await _userRepository.CreateUserInAuthContext(userInOtherContexts);
+                    await _userRepository.CreateUserInBillContext(userInOtherContexts);
                     return new ReturnUserDTO()
                     {
                         Id = user.Id,

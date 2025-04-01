@@ -26,7 +26,7 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
                 try
                 {
-                     try {
+                    try {
                         await userContext.Database.MigrateAsync();
                     }
                         catch (PostgresException ex) when (ex.SqlState == "42P07") {
@@ -35,6 +35,12 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                     
                     try {
                         await authContext.Database.MigrateAsync();
+                    }
+                        catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
+                    }
+                    try {
+                        await billContext.Database.MigrateAsync();
                     }
                         catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
                             logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
@@ -53,8 +59,14 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                                 var existsInAuthContext = await authContext.Roles.AnyAsync( r => r.Name == roleName);
                                 if(!existsInAuthContext)
                                 {
-                                    authContext.Roles.Add(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
+                                    await authContext.Roles.AddAsync(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
                                     await authContext.SaveChangesAsync();
+                                }
+                                var existsInBillContext = await billContext.Roles.AnyAsync( r => r.Name == roleName);
+                                if(!existsInBillContext)
+                                {
+                                    await billContext.Roles.AddAsync(new Role { Id = createdRole.Id, Name = roleName, NormalizedName = roleName.ToUpper() });
+                                    await billContext.SaveChangesAsync();
                                 }
                             }
                         }

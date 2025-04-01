@@ -15,6 +15,12 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// Crea un nuevo usuario en el contexto de autenticación.
         /// </summary>
         /// <param name="user">usuario a crear</param>
-        Task CreateUserInAuthContext(CreateUserDTO user);
+        Task CreateUserInAuthContext(CreateUsersInOtherContextsDTO user);
+
+        /// <summary>
+        /// Crea un nuevo usuario en el contexto de facturación.
+        /// </summary>
+        /// <param name="user">usuario a crear</param>
+        Task CreateUserInBillContext(CreateUsersInOtherContextsDTO user);
     }
 }
