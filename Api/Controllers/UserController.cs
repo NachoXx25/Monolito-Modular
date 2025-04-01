@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Application.Services.Interfaces;
-using Monolito_Modular.Domain.UserModels;
 
 namespace Monolito_Modular.Api.Controllers
 {
@@ -16,6 +15,28 @@ namespace Monolito_Modular.Api.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        /// <summary>
+        /// Obtiene todos los usuarios.
+        /// </summary>
+        /// <param name="search">Filtro de busqueda.</param>
+        /// <returns>Lista de usuarios.</returns>
+        [HttpGet("usuarios")]
+        [Authorize (Roles = "Administrador" )]
+        public async Task<IActionResult> GetAllUsers([FromQuery] SearchByDTO search)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return Ok(await _userService.GetAllUsers(search));
+            }catch(Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message});
+            }
         }
 
         /// <summary>
@@ -35,19 +56,13 @@ namespace Monolito_Modular.Api.Controllers
             }
         }
         
-        [HttpGet("usuarios")]
-        //[Authorize (Roles = "Administrador" )]
-        public Task<IActionResult> GetAllUsers()
-        {
-            throw new NotImplementedException();
-        }
-        
         /// <summary>
         /// Endpoint para crear un nuevo usuario.
         /// </summary>
         /// <param name="userDTO">Datos del usuario.</param>
         /// <returns>Ok en caso de exito o bad request en caso de errror.</returns>
         [HttpPost("usuarios")]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateUser(CreateUserDTO userDTO)
         {
             try
@@ -55,14 +70,19 @@ namespace Monolito_Modular.Api.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
-                }
-                /*
-                var userRoleClaim = User.FindFirstValue(ClaimTypes.Role);
-                if (userRoleClaim != "Administrador" && userDTO.Role == "Administrador")
+                }         
+                if (userDTO.Role?.ToLower() == "administrador")
                 {
-                    return Forbid("No tienes permisos para crear usuarios administradores.");
-                }
-                */
+                    if (!User.Identity?.IsAuthenticated == true)
+                    {
+                        return Unauthorized(new { Error = "Se requiere autenticación para crear usuarios administradores." });
+                    }
+                    
+                    if (!User.IsInRole("Administrador"))
+                    {
+                        throw new Exception("No tienes permisos para crear usuarios administradores.");
+                    }
+                }       
                 var user = await _userService.CreateUser(userDTO);
                 return Ok(user);
             }catch(Exception ex)
@@ -70,25 +90,37 @@ namespace Monolito_Modular.Api.Controllers
                 return BadRequest( new { Error = ex.Message});
             }
         }
-        /*
+        
         [HttpPatch("usuarios/{Id}")]
-        public async Task<IActionResult> UpdateUser()
+        [Authorize]
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDTO updateUserDTO, int Id)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                throw new NotImplementedException();
+                var userIdClaim = User.FindFirst("Id")?.Value;
+                if(userIdClaim != Id.ToString()) throw new Exception("No puedes editar a otros usuarios.");
+                if(!string.IsNullOrEmpty(updateUserDTO.Password)) throw new Exception("No puedes editar la contraseña campo aquí.");
+                return Ok(new { user = await _userService.UpdateUser(updateUserDTO, Id)});
             }catch(Exception ex)
             {
                 return BadRequest( new { Error = ex.Message});
             }
         }
-        */
+        
         [HttpDelete("usuarios/{Id}")]
-        //[Authorize( Roles = "Administrador" )]
+        [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             try
             {
+                var userIdClaim = User.FindFirst("Id")?.Value;
+                if(userIdClaim == Id.ToString()){
+                    throw new Exception("No puedes eliminarte a ti mismo.");
+                }
                 await _userService.DeleteUser(Id);
                 return NoContent();
             }catch(Exception ex)

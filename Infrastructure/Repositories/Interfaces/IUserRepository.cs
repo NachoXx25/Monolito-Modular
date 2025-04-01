@@ -22,5 +22,12 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// </summary>
         /// <param name="user">usuario a crear</param>
         Task CreateUserInBillContext(CreateUsersInOtherContextsDTO user);
+
+        /// <summary>
+        /// Edita algunos parámetros del usuario
+        /// </summary>
+        /// <param name="updateUser">Atributos a editar</param>
+        /// <param name="Id">Id del usuario a editar</param>
+        Task UpdateUserInOtherContexts(UpdateUserDTO updateUser, int Id);
     }
 }
