@@ -4,6 +4,13 @@ namespace Monolito_Modular.Application.Services.Interfaces
 {
     public interface IUserService
     {
+
+        /// <summary>
+        /// Obtiene todos los usuarios.
+        /// </summary>
+        /// <returns>Lista de usuarios</returns>
+        Task<IEnumerable<ReturnUserDTO>> GetAllUsers();
+
         /// <summary>
         /// Obtiene los datos de un usuario según su Id
         /// </summary>
@@ -19,15 +26,17 @@ namespace Monolito_Modular.Application.Services.Interfaces
         Task<ReturnUserDTO> CreateUser(CreateUserDTO userDTO);
 
         /// <summary>
+        /// Edita algunos parámetros del usuario
+        /// </summary>
+        /// <param name="updateUser">Atributos a editar</param>
+        /// <param name="Id">Id del usuario a editar</param>
+        /// <returns>Datos del usuario actualizado</returns>
+        Task<ReturnUserDTO> UpdateUser(UpdateUserDTO updateUser, int Id);
+
+        /// <summary>
         /// Hace un borrado lógico del usuario.
         /// </summary>
         /// <param name="Id">Id del usuario.</param>
         Task DeleteUser(int Id);
-
-        /// <summary>
-        /// Obtiene todos los usuarios.
-        /// </summary>
-        /// <returns>Lista de usuarios</returns>
-        Task<IEnumerable<ReturnUserDTO>> GetAllUsers();
     }
 }

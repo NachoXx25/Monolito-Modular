@@ -99,6 +99,47 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
                 throw new Exception("Error al procesar la operación", ex);
             }
         }
-        
+
+        /// <summary>
+        /// Edita algunos parámetros del usuario
+        /// </summary>
+        /// <param name="updateUser">Atributos a editar</param>
+        /// <param name="Id">Id del usuario a editar</param>
+        public async Task UpdateUserInOtherContexts(UpdateUserDTO updateUser, int Id)
+        {
+            var authUser = await _authContext.Users.FindAsync(Id) ?? throw new Exception("Error en el sistema, vuelva a intentarlo más tarde");
+            var billUser = await _billContext.Users.FindAsync(Id) ?? throw new Exception("Error en el sistema, vuelva a intentarlo más tarde");
+
+            if(!string.IsNullOrWhiteSpace(updateUser.Email) && updateUser.Email != authUser.Email)
+            {
+                authUser.Email = updateUser.Email;
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.FirstName) && updateUser.FirstName != authUser.FirstName)
+            {
+                authUser.FirstName = updateUser.FirstName;
+
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.LastName) && updateUser.LastName != authUser.LastName)
+            {
+                authUser.LastName = updateUser.LastName;
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.Email) && updateUser.Email != billUser.Email)
+            {
+                billUser.Email = updateUser.Email;
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.FirstName) && updateUser.FirstName != billUser.FirstName)
+            {
+                billUser.FirstName = updateUser.FirstName;
+
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.LastName) && updateUser.LastName != billUser.LastName)
+            {
+                billUser.LastName = updateUser.LastName;
+            }
+            _authContext.Users.Update(authUser);
+            await _authContext.SaveChangesAsync();
+            _billContext.Users.Update(billUser);
+            await _billContext.SaveChangesAsync();
+        }
     }
 }

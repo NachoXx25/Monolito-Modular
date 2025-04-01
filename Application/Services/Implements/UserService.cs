@@ -147,5 +147,56 @@ namespace Monolito_Modular.Application.Services.Implements
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Edita algunos parámetros del usuario
+        /// </summary>
+        /// <param name="updateUser">Atributos a editar</param>
+        /// <param name="Id">Id del usuario a editar</param>
+        /// <returns>Datos del usuario actualizado</returns>
+        public async Task<ReturnUserDTO> UpdateUser(UpdateUserDTO updateUser, int Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id.ToString()) ?? throw new Exception("El usuario especificado no existe.");
+            if(string.IsNullOrWhiteSpace(updateUser.Email) && string.IsNullOrWhiteSpace(updateUser.FirstName) && string.IsNullOrWhiteSpace(updateUser.LastName)) throw new Exception("Debe modificar al menos un campo.");
+            bool hasChanges = false;
+            if(!string.IsNullOrWhiteSpace(updateUser.Email) && updateUser.Email != user.Email)
+            {
+                user.Email = updateUser.Email;
+                hasChanges = true;
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.FirstName) && updateUser.FirstName != user.FirstName)
+            {
+                user.FirstName = updateUser.FirstName;
+                hasChanges= true;
+
+            }
+            if(!string.IsNullOrWhiteSpace(updateUser.LastName) && updateUser.LastName != user.LastName)
+            {
+                user.LastName = updateUser.LastName;
+                hasChanges = true;
+            }
+            user.UpdatedAt = DateTime.UtcNow;
+            if(!hasChanges) throw new Exception("Debe modificar al menos un campo.");
+            var role = await _roleManager.FindByIdAsync(user.RoleId.ToString()) ?? throw new Exception("Error en el sistema, vuelva a intentarlo más tarde.");
+            await _userManager.UpdateAsync(user);
+            try{
+                await _userRepository.UpdateUserInOtherContexts(updateUser, Id);
+            }catch(Exception ex){
+                throw new Exception(ex.Message);
+            }
+            var ReturnUserDTO = new ReturnUserDTO(){
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email ?? string.Empty,
+                RoleName = role.Name ?? string.Empty,
+                CreatedAt = TimeZoneInfo.ConvertTime(user.CreatedAt, 
+                            TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
+                        UpdatedAt = TimeZoneInfo.ConvertTime(user.UpdatedAt, 
+                            TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
+                        IsActive = user.Status
+            };
+            return ReturnUserDTO;
+        }
     }
 }

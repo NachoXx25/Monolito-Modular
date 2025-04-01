@@ -69,19 +69,27 @@ namespace Monolito_Modular.Api.Controllers
                 return BadRequest( new { Error = ex.Message});
             }
         }
-        /*
+        
         [HttpPatch("usuarios/{Id}")]
-        public async Task<IActionResult> UpdateUser()
+        [Authorize]
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDTO updateUserDTO, int Id)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
-                throw new NotImplementedException();
+                var userIdClaim = User.FindFirst("Id")?.Value;
+                if(userIdClaim != Id.ToString()) throw new Exception("No puedes editar a otros usuarios.");
+                if(!string.IsNullOrEmpty(updateUserDTO.Password)) throw new Exception("No puedes editar la contraseña campo aquí.");
+                return Ok(new { user = await _userService.UpdateUser(updateUserDTO, Id)});
             }catch(Exception ex)
             {
                 return BadRequest( new { Error = ex.Message});
             }
         }
-        */
+        
         [HttpDelete("usuarios/{Id}")]
         [Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> DeleteUser(int Id)
