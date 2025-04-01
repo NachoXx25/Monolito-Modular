@@ -77,7 +77,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
             try
             {
                 user.Status = false;
-                
+                user.UpdatedAt = DateTime.UtcNow;
                 await _userContext.SaveChangesAsync();
                 
                 
@@ -85,12 +85,14 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
                 if (authUser != null)
                 {
                     authUser.Status = false;
+                    authUser.UpdatedAt = DateTime.UtcNow;
                     await _authContext.SaveChangesAsync();
                 }
                 var billUser = await _billContext.Users.FindAsync(user.Id);
                 if (billUser != null)
                 {
                     billUser.Status = false;
+                    billUser.UpdatedAt = DateTime.UtcNow;
                     await _billContext.SaveChangesAsync();
                 }
             }

@@ -63,5 +63,28 @@ namespace Monolito_Modular.Application.Services.Implements
             };
             return ReturnUserDTO;
         }
+
+        /// <summary>
+        /// Registra un nuevo usuario en el sistema.
+        /// </summary>
+        /// <param name="updatePasswordDTO">Contraseñas del usuario</param>
+        /// <param name="Id">Id del usuario.</param>
+        /// <returns>Mensaje de éxito o error.</returns>
+        public async Task<string> UpdatePassword(UpdatePasswordDTO updatePasswordDTO, int Id)
+        {
+            var user = _userManager.FindByIdAsync(Id.ToString()).Result ?? throw new Exception("Usuario no encontrado.");
+            var result = await _userManager.CheckPasswordAsync(user, updatePasswordDTO.CurrentPassword);
+            if(!result) throw new Exception("La contraseña actual es incorrecta.");
+            if(updatePasswordDTO.CurrentPassword == updatePasswordDTO.NewPassword) throw new Exception("La contraseña nueva debe ser diferente a la actual.");
+            var change = await _userManager.ChangePasswordAsync(user, updatePasswordDTO.CurrentPassword, updatePasswordDTO.NewPassword);
+            if(change.Succeeded)
+            {
+                return "Contraseña actualizada con éxito.";
+            }
+            else
+            {
+                throw new Exception("Error al actualizar la contraseña.");
+            }
+        }
     }
 }
