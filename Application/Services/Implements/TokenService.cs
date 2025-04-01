@@ -15,16 +15,17 @@ namespace Monolito_Modular.Application.Services.Implements
         /// Método que crea un token JWT para un usuario.
         /// </summary>
         /// <param name="user">Usuario</param>
+        /// <param name="role">Rol del usuario</param>
         /// <returns>Token JWT</returns>
-        public Task<string> CreateToken(User user)
+        public Task<string> CreateToken(User user, Role role)
         {
             var Claims = new List<Claim>(){
                 new Claim ("Id", user.Id.ToString()),
                 new Claim ("Email", user.Email ?? throw new Exception("No se ha mandado el email.")),
-                new Claim (ClaimTypes.Role, user.Role.Name ?? throw new Exception("No se ha mandado el rol")),
+                new Claim (ClaimTypes.Role, role.Name ?? throw new Exception("No se ha mandado el rol")),
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Env.GetString("JWT_SECRET")));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.EcdsaSha256Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             var token = new JwtSecurityToken(
                 claims: Claims,

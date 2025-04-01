@@ -27,7 +27,7 @@ builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<UserContext>
 //Añadir alcance de los servicios
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 //Añadir alcance de los repositorios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
