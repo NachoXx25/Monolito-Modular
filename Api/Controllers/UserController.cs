@@ -84,7 +84,7 @@ namespace Monolito_Modular.Api.Controllers
         }
         */
         [HttpDelete("usuarios/{Id}")]
-        [Authorize( Roles = "Administrador" )]
+        //[Authorize( Roles = "Administrador" )]
         public async Task<IActionResult> DeleteUser(int Id)
         {
             try

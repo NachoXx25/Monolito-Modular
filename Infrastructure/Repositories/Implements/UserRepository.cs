@@ -87,6 +87,12 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
                     authUser.Status = false;
                     await _authContext.SaveChangesAsync();
                 }
+                var billUser = await _billContext.Users.FindAsync(user.Id);
+                if (billUser != null)
+                {
+                    billUser.Status = false;
+                    await _billContext.SaveChangesAsync();
+                }
             }
             catch(Exception ex)
             {
