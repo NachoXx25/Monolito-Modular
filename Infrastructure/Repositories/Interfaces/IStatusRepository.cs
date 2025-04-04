@@ -24,5 +24,12 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// <param name="stateName">El nombre del estado a buscar</param>
         /// <returns>El id del estado</returns>
         Task<int> GetStatusIdByName(string statusName);
+
+        /// <summary>
+        /// Obtiene el nombre de un estado de factura por su id
+        /// </summary>
+        /// <param name="statusId">El id de la factura a la que se le buscará el nombre</param>
+        /// <returns></returns>
+        Task<string> GetStatusNameById(int statusId);
     }
 }
