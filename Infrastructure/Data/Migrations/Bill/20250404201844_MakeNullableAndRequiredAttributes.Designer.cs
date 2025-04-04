@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
 
@@ -11,9 +12,11 @@ using Monolito_Modular.Infrastructure.Data.DataContexts;
 namespace Monolito_Modular.Infrastructure.Data.Migrations.Bill
 {
     [DbContext(typeof(BillContext))]
-    partial class BillContextModelSnapshot : ModelSnapshot
+    [Migration("20250404201844_MakeNullableAndRequiredAttributes")]
+    partial class MakeNullableAndRequiredAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
