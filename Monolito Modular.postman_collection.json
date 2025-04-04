@@ -17,7 +17,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEwIiwiRW1haWwiOiJob2xhQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluaXN0cmFkb3IiLCJleHAiOjE3NDM2MDUxMzV9.Q-ZpzsqRFB0OWaJJwp1tlp4SXiWVGOWL5vz9Bw6QCeA",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -61,7 +61,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIiLCJFbWFpbCI6IngueEBnbWFpbC5jb20iLCJOaWNrTmFtZSI6Ik5hc2Nob1h4IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRnJlZSIsImV4cCI6MTc0MzA4NTA1MX0.bqC7FDXmUAFUdHmbMyVvIAP9m_hxhyGl3dFj7Hwv3Dk",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -89,7 +89,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjExIiwiRW1haWwiOiJob2xhc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDbGllbnRlIiwiZXhwIjoxNzQzNjAxMTUxfQ.VpTOXDiSJmAbfkBZk3DuWOKWtxTQOWto_kkXRx_y2nU",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -125,7 +125,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEiLCJFbWFpbCI6IkFscGVuc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDbGllbnRlIiwiZXhwIjoxNzQzNTkzNTQxfQ.tFK5GNw5qVuMRTn3a6Yd3bPXmkn8ip49eQw3q7JkiMQ",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -179,7 +179,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjIiLCJFbWFpbCI6InNlbWVuZXNlc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhZG9yIiwiZXhwIjoxNzQzNTk1MzQyfQ.vve-yoICW6QRvHoSFeUUvIKbXKdJ-NFS7Mw0-252R8Y",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -206,6 +206,20 @@
 			"item": [
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"token\", res.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -239,7 +253,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjExIiwiRW1haWwiOiJob2xhc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJDbGllbnRlIiwiZXhwIjoxNzQzNjAxMTUxfQ.VpTOXDiSJmAbfkBZk3DuWOKWtxTQOWto_kkXRx_y2nU",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
