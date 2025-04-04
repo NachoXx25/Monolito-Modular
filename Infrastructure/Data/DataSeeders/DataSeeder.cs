@@ -9,6 +9,7 @@ using Monolito_Modular.Domain.UserModels;
 using MySql.Data.MySqlClient;
 using Npgsql;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
+using Bogus;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 {
@@ -71,7 +72,49 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                             }
                         }
                     }
-                
+                    if(!await userContext.Users.AnyAsync())
+                    {
+                        var faker = new Faker<User>()
+                            .RuleFor(u => u.UserName, f => f.Internet.UserName())
+                            .RuleFor(u => u.NormalizedUserName, (f, u) => u.UserName?.ToUpper())
+                            .RuleFor(u => u.Email, f => f.Internet.Email())
+                            .RuleFor(u => u.NormalizedEmail, (f, u) => u.Email?.ToUpper())
+                            .RuleFor(u => u.PasswordHash, (f, u) => new PasswordHasher<User>().HashPassword(u, "Password123!"))
+                            .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                            .RuleFor(u => u.LastName, f => f.Name.LastName())
+                            .RuleFor(u => u.Status, f => f.PickRandom(new[] { true, false }))
+                            .RuleFor(u => u.RoleId, f => userContext.Roles.First(r => r.Name == f.PickRandom(roles)).Id);
+                        userContext.Users.AddRange(faker.Generate(150));
+                        await userContext.SaveChangesAsync();
+                        authContext.Users.AddRange(userContext.Users.Select(u => new User
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            NormalizedUserName = u.NormalizedUserName,
+                            Email = u.Email,
+                            NormalizedEmail = u.NormalizedEmail,
+                            PasswordHash = u.PasswordHash,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Status = u.Status,
+                            RoleId = u.RoleId
+                        }));
+                        await authContext.SaveChangesAsync();
+                        billContext.Users.AddRange(userContext.Users.Select(u => new User
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            NormalizedUserName = u.NormalizedUserName,
+                            Email = u.Email,
+                            NormalizedEmail = u.NormalizedEmail,
+                            PasswordHash = u.PasswordHash,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Status = u.Status,
+                            RoleId = u.RoleId
+                        }));
+                        await billContext.SaveChangesAsync();
+                    };
                     var statuses = new[] { "Pendiente", "Pagado", "Vencido" };
                     
                     if(!await billContext.Statuses.AnyAsync())
