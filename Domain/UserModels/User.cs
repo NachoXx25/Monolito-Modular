@@ -13,7 +13,7 @@ namespace Monolito_Modular.Domain.UserModels
         public required int RoleId { get; set; }  
         public Role Role { get; set; }  = null!;
         public required bool Status { get; set; }  
-        public required DateTime CreatedAt { get; set; }  = DateTime.UtcNow;
-        public required DateTime UpdatedAt { get; set; }  = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }  = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; }  = DateTime.UtcNow;
     }
 }
