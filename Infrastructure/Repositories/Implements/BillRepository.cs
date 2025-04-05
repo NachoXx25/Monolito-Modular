@@ -50,15 +50,13 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <exception cref="Exception">Si no se encuentra la factura</exception>
         public async Task UpdateBillState(int id, int statusId, DateTime? paymentDate)
         {
-            var bill = await GetBillById(id);
+            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id) ?? throw new Exception("Factura no encontrada");
 
-            if(bill != null){
-                bill.StatusId = statusId;
-                if(paymentDate != null){
-                    bill.PaymentDate = (DateTime)paymentDate;
-                }
-                await _context.SaveChangesAsync();
+            bill.StatusId = statusId;
+            if(paymentDate != null){
+                bill.PaymentDate = (DateTime)paymentDate;
             }
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -67,11 +65,10 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a borrar</param>
         public async Task DeleteBill(int id)
         {
-            var bill = await GetBillById(id);
-            if(bill != null){
-                bill.IsDeleted = true;
-                await _context.SaveChangesAsync();
-            }
+            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id) ?? throw new Exception("Factura no encontrada");
+
+            bill.IsDeleted = true;
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
