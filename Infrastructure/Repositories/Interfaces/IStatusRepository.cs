@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Monolito_Modular.Domain.BillModel;
 
 namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
 {
@@ -16,7 +17,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// <summary>
         /// Obtiene todos los estados de factura
         /// </summary>
-        Task<string[]> GetAllStatuses();
+        Task<Status[]> GetAllStatuses();
 
         /// <summary>
         /// Obtiene el id de un estado de factura por su nombre
