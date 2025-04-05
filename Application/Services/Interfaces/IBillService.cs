@@ -33,7 +33,7 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// </summary>
         /// <param name="search">Búsqueda de una factura</param>
         /// <returns></returns>
-        Task<CreatedBillDTO[]> GetBills(int userId, string userRole);
+        Task<CreatedBillDTO[]> GetBills(int userId, string userRole, string? statusName);
 
         /// <summary>
         /// Hace un borrado lógico de una factura.
