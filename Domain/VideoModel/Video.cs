@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.EntityFrameworkCore;
 
 namespace Monolito_Modular.Domain.VideoModel
 {
-    [Collection("videos")]
+    [Collection("Videos")]
     public class Video
     {
-        public int Id { get; set; }
+        public ObjectId Id { get; set; }
 
         public required string Title { get; set; }
         
