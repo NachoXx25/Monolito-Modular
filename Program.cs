@@ -29,11 +29,13 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IVideoService, VideoService>();
+
 //Añadir alcance de los repositorios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
-
+builder.Services.AddScoped<IVideoRepository, VideoRepository>();
 
 //Conexión a base de datos de módulo de usuarios (MySQL)
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
