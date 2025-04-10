@@ -76,8 +76,33 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                     }
                     if(!await userContext.Users.AnyAsync())
                     {
+                        var customer = new User(){
+                            FirstName = "Juan",
+                            LastName = "Perez",
+                            UserName = Guid.NewGuid().ToString(),
+                            NormalizedUserName = "JUANPEREZ",
+                            Email = "juan@gmail.com",
+                            NormalizedEmail = "JUAN@GMAIL.COM",
+                            Status = true,
+                            RoleId = userContext.Roles.First(r => r.Name == "Cliente").Id
+                        };
+                        customer.PasswordHash = new PasswordHasher<User>().HashPassword(customer, "Password123!");
+                        userContext.Users.Add(customer);
+                        var administrador = new User(){
+                            
+                            FirstName = "Juana",
+                            LastName = "Valencia",
+                            UserName = Guid.NewGuid().ToString(),
+                            NormalizedUserName = "JUANAVALENCIA",
+                            Email = "juana@gmail.com",
+                            NormalizedEmail = "JUANA@GMAIL.COM",
+                            Status = true,
+                            RoleId = userContext.Roles.First(r => r.Name == "Administrador").Id
+                        };
+                        administrador.PasswordHash = new PasswordHasher<User>().HashPassword(administrador, "Password123!");
+                        userContext.Users.Add(administrador);
                         var faker = new Faker<User>()
-                            .RuleFor(u => u.UserName, f => f.Internet.UserName())
+                            .RuleFor(u => u.UserName, f => Guid.NewGuid().ToString())
                             .RuleFor(u => u.NormalizedUserName, (f, u) => u.UserName?.ToUpper())
                             .RuleFor(u => u.Email, f => f.Internet.Email())
                             .RuleFor(u => u.NormalizedEmail, (f, u) => u.Email?.ToUpper())
