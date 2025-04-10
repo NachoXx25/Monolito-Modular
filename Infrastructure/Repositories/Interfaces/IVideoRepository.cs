@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Domain.VideoModel;
-using Mysqlx.Crud;
 
 namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
 {
@@ -22,7 +17,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// </summary>
         /// <param name="id">El id del video a obtener</param>
         /// <returns>El video solicitado</returns>
-        Task<Video> GetVideoById(string id);
+        Task<Video?> GetVideoById(string id);
 
         /// <summary>
         /// Actualiza un video en la base de datos

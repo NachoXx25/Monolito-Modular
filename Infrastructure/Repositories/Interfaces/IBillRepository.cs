@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Domain.BillModel;
 
 namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
@@ -20,7 +15,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// Obtiene una factura por su id
         /// </summary>
         /// <param name="id">El id de la factura a buscar</param>
-        Task<Bill> GetBillById(int id);
+        Task<Bill?> GetBillById(int id);
 
         /// <summary>
         /// Actualiza el estado de una factura

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Monolito_Modular.Domain.BillModel;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
@@ -36,10 +32,9 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a buscar</param>
         /// <returns>Factura encontrada</returns>
         /// <exception cref="Exception">Si no se encuentra la factura</exception>
-        public async Task<Bill> GetBillById(int id)
+        public async Task<Bill?> GetBillById(int id)
         {
-            var bill = await _context.Bills.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
-            return bill ?? throw new Exception("Factura no encontrada");
+            return await _context.Bills.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
         }
 
         /// <summary>
@@ -65,9 +60,13 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a borrar</param>
         public async Task DeleteBill(int id)
         {
+            // Se busca la factura por su id
             var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id) ?? throw new Exception("Factura no encontrada");
-
+            
+            // Cambiar su estado a borrado lógico
             bill.IsDeleted = true;
+
+            //Guardar los cambios en la base de datos
             await _context.SaveChangesAsync();
         }
 

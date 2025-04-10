@@ -9,12 +9,6 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
     public interface IStatusRepository
     {
         /// <summary>
-        /// Verifica si un estado de factura es válido
-        /// </summary>
-        /// <param name="statusName">El estado a verificar</param>
-        Task<bool> IsStatusValid(string statusName);
-
-        /// <summary>
         /// Obtiene todos los estados de factura
         /// </summary>
         Task<Status[]> GetAllStatuses();
@@ -22,7 +16,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// <summary>
         /// Obtiene el id de un estado de factura por su nombre
         /// </summary>
-        /// <param name="stateName">El nombre del estado a buscar</param>
+        /// <param name="statusName">El nombre del estado a buscar</param>
         /// <returns>El id del estado</returns>
         Task<int> GetStatusIdByName(string statusName);
 

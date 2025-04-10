@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Domain.VideoModel;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
@@ -44,7 +39,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         public async Task<Video[]> GetAllVideos()
         {
             //Obtenemos todos los videos no eliminados de la base de datos
-            return await _context.Videos.AsNoTracking().Where(v => !v.IsDeleted).ToArrayAsync() ?? throw new Exception("No se encontraron videos");
+            return await _context.Videos.AsNoTracking().Where(v => !v.IsDeleted).ToArrayAsync();
         }
 
         /// <summary>
@@ -52,13 +47,10 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// </summary>
         /// <param name="id">El id del video a obtener</param>
         /// <returns>El video solicitado</returns>
-        public async Task<Video> GetVideoById(string id)
+        public async Task<Video?> GetVideoById(string id)
         {
             //Buscar el video por su id
-            var video = await _context.Videos.AsNoTracking().FirstOrDefaultAsync(v => v.Id.ToString() == id) ?? throw new Exception("Video no encontrado");
-            
-            //Retornar el video encontrado
-            return video;
+            return await _context.Videos.AsNoTracking().FirstOrDefaultAsync(v => v.Id.ToString() == id);
         }
 
         /// <summary>
