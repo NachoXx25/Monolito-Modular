@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Monolito_Modular.Application.DTOs
 {
-    public class VideoSearch
+    public class VideoSearchDTO
     {
         public string? Title { get; set; }
 
