@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Application.Services.Interfaces;
-using Monolito_Modular.Domain.VideoModel;
 
 namespace Monolito_Modular.Api.Controllers
 {
@@ -33,17 +27,12 @@ namespace Monolito_Modular.Api.Controllers
         {
             try
             {
-                if(video == null)
+                if(!ModelState.IsValid)
                 {
-                    return BadRequest(new { message = "El video no puede ser nulo" });
+                    return BadRequest(ModelState);
                 }
 
                 var uploadedVideo = await _videoService.UploadVideo(video);
-
-                if (uploadedVideo == null)
-                {
-                    return BadRequest(new { message = "Error al subir el video" });
-                }
 
                 return Ok(uploadedVideo);
             }
@@ -64,9 +53,9 @@ namespace Monolito_Modular.Api.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(id))
+                if (string.IsNullOrWhiteSpace(id))
                 {
-                    return BadRequest(new { message = "Id inválido" });
+                    return BadRequest(new { message = "El Id es requerido" });
                 }
 
                 var video = await _videoService.GetVideoById(id);
@@ -98,20 +87,15 @@ namespace Monolito_Modular.Api.Controllers
             {
                 if (string.IsNullOrEmpty(id))
                 {
-                    return BadRequest(new { message = "Id inválido" });
+                    return BadRequest(new { message = "El Id es requerido" });
                 }
 
-                if (updateVideo == null)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest(new { message = "El video no puede ser nulo" });
+                    return BadRequest(ModelState);
                 }
 
                 var updatedVideo = await _videoService.UpdateVideo(id, updateVideo);
-
-                if (updatedVideo == null)
-                {
-                    return BadRequest(new { message = "Error al actualizar el video" });
-                }
 
                 return Ok(updatedVideo);
             }
@@ -132,14 +116,14 @@ namespace Monolito_Modular.Api.Controllers
         {
            try
            {
-                if (string.IsNullOrEmpty(id))
+                if (string.IsNullOrWhiteSpace(id))
                 {
-                    return BadRequest(new { message = "Id inválido" });
+                    return BadRequest(new { message = "El Id es requerido" });
                 }
 
                 await _videoService.DeleteVideo(id);
 
-                return Ok();
+                return NoContent();
            }
            catch (Exception ex)
            {
@@ -154,7 +138,7 @@ namespace Monolito_Modular.Api.Controllers
         /// <returns>Listado de videos encontrados según el filtrado</returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAllVideos([FromQuery] VideoSearch? search)
+        public async Task<IActionResult> GetAllVideos([FromQuery] VideoSearchDTO? search)
         {
             try
             {

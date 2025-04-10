@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monolito_Modular.Application.DTOs;
@@ -30,8 +26,8 @@ namespace Monolito_Modular.Api.Controllers
         public async Task<IActionResult> CreateBill([FromBody] CreateBillDTO bill)
         {
             try{
-                if(bill == null ){
-                    return BadRequest(new { Error = "La factura no puede ser nula" });
+                if(!ModelState.IsValid){
+                    return BadRequest(ModelState);
                 }
                 var newBill = await _billService.AddBill(bill);
                 return Ok(newBill);
@@ -52,18 +48,13 @@ namespace Monolito_Modular.Api.Controllers
         {
             try
             {
-                var userId = User.FindFirstValue("Id");
 
-                var userRole = User.FindFirstValue(ClaimTypes.Role);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return BadRequest(new { Error = "El id de usuario no existe" });
+                if(id <= 0){
+                    return BadRequest(new { Error = "El id de la factura no puede ser menor o igual a 0." });
                 }
 
-                if(string.IsNullOrEmpty(userRole)){
-                    return BadRequest(new { Error = "El rol de usuario no existe" });
-                }
+                var userId = User.FindFirstValue("Id") ?? throw new Exception("No se ha enviado un id");
+                var userRole = User.FindFirstValue(ClaimTypes.Role) ?? throw new Exception("No se ha enviado un rol");
 
                 var bill = await _billService.GetBillById(id, int.Parse(userId), userRole);
                 if (bill == null)
@@ -87,17 +78,9 @@ namespace Monolito_Modular.Api.Controllers
         public async Task<IActionResult> GetBillsByUser([FromQuery] string? statusName)
         {
             try
-                {
-                    var userId = User.FindFirstValue("Id");
-                var userRole = User.FindFirstValue(ClaimTypes.Role);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return BadRequest(new { Error = "El id de usuario no existe" });
-                }
-                if(string.IsNullOrEmpty(userRole)){
-                    return BadRequest(new { Error = "El rol de usuario no existe" });
-                }
+            {
+                var userId = User.FindFirstValue("Id") ?? throw new Exception("No se ha enviado un id");
+                var userRole = User.FindFirstValue(ClaimTypes.Role) ?? throw new Exception("No se ha enviado un rol");
 
                 var bills = await _billService.GetBills(int.Parse(userId), userRole, statusName);
 
@@ -124,8 +107,11 @@ namespace Monolito_Modular.Api.Controllers
         public async Task<IActionResult> UpdateBill(int id, [FromBody] string statusName)
         {
            try{
-                if(string.IsNullOrEmpty(statusName)){
-                    return BadRequest(new { Error = "El estado de la factura no puede estar vacío." });
+                if(string.IsNullOrWhiteSpace(statusName)){
+                    return BadRequest(new { Error = "El estado de la factura es requerido" });
+                }
+                if(id <= 0){
+                    return BadRequest(new { Error = "El id de la factura no puede ser menor o igual a 0." });
                 }
                 await _billService.UpdateBillStatus(id, statusName);
                 return NoContent();
@@ -146,8 +132,8 @@ namespace Monolito_Modular.Api.Controllers
         public async Task<IActionResult> DeleteBill(int id)
         {
             try{
-                if(id < 0){
-                    return BadRequest(new { Error = "El id de la factura no puede ser menor a 0." });
+                if(id <= 0){
+                    return BadRequest(new { Error = "El id de la factura no puede ser menor o igual a 0." });
                 }
                 await _billService.DeleteBill(id);
                 return NoContent();
