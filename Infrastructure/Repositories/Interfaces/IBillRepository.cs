@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Domain.BillModel;
 
 namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
@@ -14,20 +9,20 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// Agrega una factura a la base de datos
         /// </summary>
         /// <param name="bill">Factura a agregar.</param>
-        Task AddBill(Bill bill);
+        Task<Bill> AddBill(Bill bill);
 
         /// <summary>
         /// Obtiene una factura por su id
         /// </summary>
         /// <param name="id">El id de la factura a buscar</param>
-        Task<Bill> GetBillById(int id);
+        Task<Bill?> GetBillById(int id);
 
         /// <summary>
         /// Actualiza el estado de una factura
         /// </summary>
         /// <param name="id">El id de la factura a actualizar</param>
         /// <param name="statusId">El id del nuevo estado de la factura</param>
-        Task UpdateBillState(int id, int statusId);
+        Task UpdateBillState(int id, int statusId, DateTime? paymentDate);
 
         /// <summary>
         /// Hace un borrado lógico de una factura
@@ -47,5 +42,11 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// <param name="userId">El id del usuario al que le corresponden las facturas</param>
         /// <returns>Listado de facturas del usuario</returns>
         Task<Bill[]> GetAllBillsByUserId(int userId);
+
+        /// <summary>
+        /// Verifica si un usuario existe en la base de datos según su id
+        /// </summary>
+        /// <param name="userId">El id del usuario a verificar</param>
+        Task<bool> UserExists(int userId);
     }
 }

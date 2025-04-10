@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 using Npgsql;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
 using Bogus;
+using Monolito_Modular.Domain.VideoModel;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 {
@@ -22,6 +23,7 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                 var userContext = scope.ServiceProvider.GetRequiredService<UserContext>();
                 var authContext = scope.ServiceProvider.GetRequiredService<AuthContext>();
                 var billContext = scope.ServiceProvider.GetRequiredService<BillContext>();
+                var videoContext = scope.ServiceProvider.GetRequiredService<VideoContext>();
 
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<DataSeeder>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
@@ -124,6 +126,37 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                             billContext.Statuses.Add(new Status { Name = status });
                         }
                         await billContext.SaveChangesAsync();
+                    }
+
+                    if(!await billContext.Bills.AnyAsync())
+                    {
+
+                        var paidStatusId = billContext.Statuses.First(s => s.Name == "Pagado").Id;
+
+                        var faker = new Faker<Bill>()
+                            .RuleFor(b => b.UserId, f => f.PickRandom(userContext.Users.ToList()).Id)
+                            .RuleFor(b => b.StatusId, f => f.PickRandom(billContext.Statuses.ToList()).Id)
+                            .RuleFor(b => b.AmountToPay, f => (int)f.Finance.Amount(10, 1000))
+                            .RuleFor(b => b.CreatedAt, f => f.Date.Past(1))
+                            .RuleFor(b => b.PaymentDate, (f, b) => {
+                                if (b.StatusId == paidStatusId)
+                                    return f.Date.Between(b.CreatedAt, DateTime.Now);
+                                else
+                                    return null;
+                            });
+
+                        billContext.Bills.AddRange(faker.Generate(350));
+                        await billContext.SaveChangesAsync();
+                    }
+
+                    if(!await videoContext.Videos.AnyAsync())
+                    {
+                        var faker = new Faker<Video>()
+                            .RuleFor(v => v.Title, f => f.Lorem.Sentence(3))
+                            .RuleFor(v => v.Description, f => f.Lorem.Paragraph(2))
+                            .RuleFor(v => v.Genre, f => f.PickRandom(new[] { "Acción", "Comedia", "Drama", "Terror", "Ciencia Ficción" }));
+                        videoContext.Videos.AddRange(faker.Generate(450));
+                        await videoContext.SaveChangesAsync();
                     }
                 }
                 catch(Exception ex)

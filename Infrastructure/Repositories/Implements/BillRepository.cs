@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Monolito_Modular.Domain.BillModel;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
@@ -23,9 +19,11 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// Agrega una factura a la base de datos
         /// </summary>
         /// <param name="bill">Factura a agregar.</param>
-        public async Task AddBill(Bill bill)
+        public async Task<Bill> AddBill(Bill bill)
         {
             await _context.Bills.AddAsync(bill);
+            await _context.SaveChangesAsync();
+            return bill;
         }
 
         /// <summary>
@@ -34,16 +32,9 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a buscar</param>
         /// <returns>Factura encontrada</returns>
         /// <exception cref="Exception">Si no se encuentra la factura</exception>
-        public async Task<Bill> GetBillById(int id)
+        public async Task<Bill?> GetBillById(int id)
         {
-            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id);
-            if(bill != null){
-                return bill;
-            }
-            else
-            {
-                throw new Exception("Factura no encontrada");
-            } 
+            return await _context.Bills.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
         }
 
         /// <summary>
@@ -52,14 +43,15 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a actualizar</param>
         /// <param name="statusId">El id del nuevo estado de la factura</param>
         /// <exception cref="Exception">Si no se encuentra la factura</exception>
-        public async Task UpdateBillState(int id, int statusId)
+        public async Task UpdateBillState(int id, int statusId, DateTime? paymentDate)
         {
-            var bill = GetBillById(id).Result;
+            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id) ?? throw new Exception("Factura no encontrada");
 
-            if(bill != null){
-                bill.StatusId = statusId;
-                await _context.SaveChangesAsync();
+            bill.StatusId = statusId;
+            if(paymentDate != null){
+                bill.PaymentDate = (DateTime)paymentDate;
             }
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -68,11 +60,14 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <param name="id">El id de la factura a borrar</param>
         public async Task DeleteBill(int id)
         {
-            var bill = GetBillById(id).Result;
-            if(bill != null){
-                bill.IsDeleted = true;
-                await _context.SaveChangesAsync();
-            }
+            // Se busca la factura por su id
+            var bill = await _context.Bills.FirstOrDefaultAsync(b => b.Id == id) ?? throw new Exception("Factura no encontrada");
+            
+            // Cambiar su estado a borrado lógico
+            bill.IsDeleted = true;
+
+            //Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -81,7 +76,7 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <returns>Listado de facturas</returns>
         public async Task<Bill[]> GetAllBills()
         {
-            return await _context.Bills.ToArrayAsync();
+            return await _context.Bills.AsNoTracking().ToArrayAsync();
         }
 
         /// <summary>
@@ -91,7 +86,16 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <returns>Listado de las facturas del usuario</returns>
         public async Task<Bill[]> GetAllBillsByUserId(int userId)
         {
-            return await _context.Bills.Where(b => b.UserId == userId).ToArrayAsync();
+            return await _context.Bills.AsNoTracking().Where(b => b.UserId == userId).ToArrayAsync();
+        }
+
+        /// <summary>
+        /// Verifica si un usuario existe en la base de datos según su id
+        /// </summary>
+        /// <param name="userId">El id del usuario a verificar</param>
+        public async Task<bool> UserExists(int userId)
+        {
+            return await _context.Users.FindAsync(userId) != null;
         }
     }
 }

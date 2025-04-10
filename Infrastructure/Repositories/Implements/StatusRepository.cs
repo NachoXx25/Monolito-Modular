@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Monolito_Modular.Domain.BillModel;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
 using Monolito_Modular.Infrastructure.Repositories.Interfaces;
 
@@ -18,38 +15,36 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
             _context = context;
         }
 
-        public async Task<string[]> GetAllStatuses()
+        /// <summary>
+        /// Obtiene todos los estados de factura de la base de datos.
+        /// </summary>
+        /// <returns>Listado de las facturas con sus ids y nombres</returns>
+        public async Task<Status[]> GetAllStatuses()
         {
-            var statuses = await _context.Statuses.Select(s => s.Name).ToArrayAsync();
-
-            if(statuses != null){
-                return statuses;
-            }
-            else{
-                throw new Exception("No se encontraron estados en la base de datos.");
-            }
+            var statuses = await _context.Statuses.AsNoTracking().ToArrayAsync() ?? throw new Exception("No se han encontrado estados en la base de datos.");
+            return statuses;
         }
 
-        public async Task<int> GetStatusIdByName(string stateName)
+        /// <summary>
+        /// Obtiene el id del estado de una factura a partir del nombre del estado.
+        /// </summary>
+        /// <param name="statusName">El nombre del estado</param>
+        /// <returns>El id del estado</returns>
+        public async Task<int> GetStatusIdByName(string statusName)
         {
-            var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == stateName);
-
-            if(status != null){
-                return status.Id;
-            }else{
-                throw new Exception($"El estado {stateName} no existe en la base de datos.");
-            }
+            var status = await _context.Statuses.AsNoTracking().FirstOrDefaultAsync(s => s.Name == statusName) ?? throw new Exception("El estado no existe en la base de datos.");
+            return status.Id;
         }
 
-        public async Task<bool> IsStatusValid(string statusName)
+        /// <summary>
+        /// Obtiene el nombre del estado de una factura a partir del id del estado.
+        /// </summary>
+        /// <param name="statusId">El id del estado</param>
+        /// <returns>El nombre del estado</returns>
+        public async Task<string> GetStatusNameById(int statusId)
         {
-            var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == statusName);
-
-            if(status != null){
-                return true;
-            }else{
-                return false;
-            }
+            var status = await _context.Statuses.AsNoTracking().FirstOrDefaultAsync(s => s.Id == statusId) ?? throw new Exception("El estado no existe en la base de datos.");
+            return status.Name;
         }
     }
 }

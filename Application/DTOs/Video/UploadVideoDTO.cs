@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.EntityFrameworkCore;
 
-namespace Monolito_Modular.Domain.VideoModel
+namespace Monolito_Modular.Application.DTOs
 {
-    [Collection("Videos")]
-    public class Video
+    public class UploadVideoDTO
     {
-        public ObjectId Id { get; set; }
-
+        [Required(ErrorMessage = "El título es requerido.")]
         public required string Title { get; set; }
-        
+
+        [Required(ErrorMessage = "La descripción es requerida.")]        
         public required string Description { get; set; }
 
+        [Required(ErrorMessage = "El género es requerido.")]
         public required string Genre { get; set; }
-
-        public required bool IsDeleted { get; set; }  = false;
     }
 }
