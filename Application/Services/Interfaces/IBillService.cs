@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Monolito_Modular.Application.DTOs;
-using Monolito_Modular.Domain.BillModel;
 
 namespace Monolito_Modular.Application.Services.Interfaces
 {
@@ -19,7 +14,7 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// Obtener una factura por su id.
         /// </summary>
         /// <param name="id">El id de la factura a obtener</param>
-        Task<CreatedBillDTO> GetBillById(int id, int userId, string userRole);
+        Task<CreatedBillDTO?> GetBillById(int id, int userId, string userRole);
 
         /// <summary>
         /// Cambiar el estado de una factura.
@@ -33,7 +28,7 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// </summary>
         /// <param name="search">Búsqueda de una factura</param>
         /// <returns></returns>
-        Task<CreatedBillDTO[]> GetBills(int userId, string userRole, string? statusName);
+        Task<CreatedBillDTO[]?> GetBills(int userId, string userRole, string? statusName);
 
         /// <summary>
         /// Hace un borrado lógico de una factura.

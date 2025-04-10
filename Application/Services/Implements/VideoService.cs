@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Monolito_Modular.Application.DTOs;
 using Monolito_Modular.Application.Services.Interfaces;
 using Monolito_Modular.Domain.VideoModel;
@@ -25,14 +21,7 @@ namespace Monolito_Modular.Application.Services.Implements
         /// <returns></returns>
         public async Task DeleteVideo(string id)
         {
-            // Validar que el id no sea nulo o vacío
-            if(!string.IsNullOrEmpty(id))
-            {
-                // Borrar el video
-                await _videoRepository.DeleteVideo(id);
-            } else{
-                throw new ArgumentException("Id inválido");
-            }
+            await _videoRepository.DeleteVideo(id);
         }
 
         /// <summary>
@@ -40,10 +29,15 @@ namespace Monolito_Modular.Application.Services.Implements
         /// </summary>
         /// <param name="search">Filtro opcional por género o título</param>
         /// <returns>Listado de todos los videos según el filtrado</returns>
-        public async Task<GetVideoDTO[]> GetAllVideos(VideoSearch? search)
+        public async Task<GetVideoDTO[]?> GetAllVideos(VideoSearchDTO? search)
         {
             // Obtener todos los videos
-            var videos = await _videoRepository.GetAllVideos() ?? throw new ArgumentException("No se encontraron videos");
+            var videos = await _videoRepository.GetAllVideos();
+
+            if (videos == null)
+            {
+                return null;
+            }
 
             // Mapear los videos a DTOs
             var mappedVideos = videos.Select(video => new GetVideoDTO
@@ -55,24 +49,18 @@ namespace Monolito_Modular.Application.Services.Implements
             }).ToArray();
 
             // Filtrar los videos según título
-            if(!string.IsNullOrEmpty(search?.Title))
+            if(!string.IsNullOrWhiteSpace(search?.Title))
             {
                 mappedVideos = mappedVideos.Where(video => video.Title.Contains(search.Title, StringComparison.OrdinalIgnoreCase)).ToArray();
             }
 
             // Filtrar los videos según género
-            if(!string.IsNullOrEmpty(search?.Genre))
+            if(!string.IsNullOrWhiteSpace(search?.Genre))
             {
                 mappedVideos = mappedVideos.Where(video => video.Genre.Contains(search.Genre, StringComparison.OrdinalIgnoreCase)).ToArray();
             }
 
-            // Lanzar una excepción si no se encontraron videos
-            if(mappedVideos.Length == 0)
-            {
-                throw new ArgumentException("No se encontraron videos con los criterios de búsqueda especificados");
-            } else{
-                return mappedVideos;
-            }
+            return mappedVideos;
         }
 
         /// <summary>
@@ -80,27 +68,27 @@ namespace Monolito_Modular.Application.Services.Implements
         /// </summary>
         /// <param name="id">El id del video a obtener</param>
         /// <returns>El video buscado</returns>
-        public async Task<GetVideoDTO> GetVideoById(string id)
+        public async Task<GetVideoDTO?> GetVideoById(string id)
         {
-            // Validar que el id no sea nulo o vacío
-            if(!string.IsNullOrEmpty(id))
+            // Obtener el video por id
+            var video = await _videoRepository.GetVideoById(id);
+
+            //Si es nulo, lo retorno
+            if(video == null)
             {
-                // Obtener el video por id
-                var video = await _videoRepository.GetVideoById(id) ?? throw new ArgumentException("Video no encontrado");
-
-                // Mapear el video a un DTO con la información necesaria
-                var mappedVideo = new GetVideoDTO
-                {
-                    Id = video.Id.ToString(),
-                    Title = video.Title,
-                    Description = video.Description,
-                    Genre = video.Genre,
-                };
-
-                return mappedVideo;
-            } else{
-                throw new ArgumentException("Id inválido");
+                return null;
             }
+
+            // Mapear el video a un DTO con la información necesaria
+            var mappedVideo = new GetVideoDTO
+            {
+                Id = video.Id.ToString(),
+                Title = video.Title,
+                Description = video.Description,
+                Genre = video.Genre,
+            };
+
+            return mappedVideo;
         }
 
         /// <summary>
@@ -111,38 +99,26 @@ namespace Monolito_Modular.Application.Services.Implements
         /// <returns>El video actualizado</returns>
         public async Task<UpdateVideoDTO> UpdateVideo(string id, UpdateVideoDTO updateVideo)
         {
-            //Validar que el id no sea nulo o vacío
-            if(!string.IsNullOrEmpty(id))
-            {
-                //Validar que los datos a cambiar no sean nulo
-                if(updateVideo == null)
-                {
-                    throw new ArgumentException("Los datos para actualizar no pueden ser nulo");
-                }
+           // Obtener el video por id
+            var video = await _videoRepository.GetVideoById(id) ?? throw new ArgumentException("Video no encontrado");
 
-                // Obtener el video por id
-                var video = await _videoRepository.GetVideoById(id) ?? throw new ArgumentException("Video no encontrado");
-
-                // Validar que el video no esté eliminado antes de actualizarlo
-                if(video.IsDeleted){
-                    throw new ArgumentException("No se puede actualizar un video eliminado");
-                }
-
-                //Actualizar el video y obtenerlo
-                var updatedVideo = await _videoRepository.UpdateVideo(id, updateVideo) ?? throw new ArgumentException("Error al actualizar el video");
-
-                // Mapear el video actualizado a un DTO con la información necesaria
-                var mappedVideo = new UpdateVideoDTO
-                {
-                    Title = updatedVideo.Title,
-                    Description = updatedVideo.Description,
-                    Genre = updatedVideo.Genre,
-                };
-
-                return mappedVideo;
-            } else{
-                throw new ArgumentException("Id inválido");
+            // Validar que el video no esté eliminado antes de actualizarlo
+            if(video.IsDeleted){
+                throw new ArgumentException("No se puede actualizar un video eliminado");
             }
+
+            //Actualizar el video y obtenerlo
+            var updatedVideo = await _videoRepository.UpdateVideo(id, updateVideo) ?? throw new ArgumentException("Error al actualizar el video");
+
+            // Mapear el video actualizado a un DTO con la información necesaria
+            var mappedVideo = new UpdateVideoDTO
+            {
+                Title = updatedVideo.Title,
+                Description = updatedVideo.Description,
+                Genre = updatedVideo.Genre,
+            };
+
+            return mappedVideo;
         }
 
         /// <summary>
@@ -152,34 +128,28 @@ namespace Monolito_Modular.Application.Services.Implements
         /// <returns>El video subido</returns>
         public async Task<GetVideoDTO> UploadVideo(UploadVideoDTO video)
         {
-            // Validar que el video a subir no sea nulo
-            if(video != null)
+            //Mapear los datos del video a un objeto Video
+            var toUploadVideo = new Video
             {
-                //Mapear los datos del video a un objeto Video
-                var toUploadVideo = new Video
-                {
-                    Title = video.Title,
-                    Description = video.Description,
-                    Genre = video.Genre,
-                    IsDeleted = false,
-                };
+                Title = video.Title,
+                Description = video.Description,
+                Genre = video.Genre,
+                IsDeleted = false,
+            };
 
-                // Subir el video y obtenerlo
-                var uploadedVideo = await _videoRepository.UploadVideo(toUploadVideo) ?? throw new ArgumentException("Error al subir el video");
+            // Subir el video y obtenerlo
+            var uploadedVideo = await _videoRepository.UploadVideo(toUploadVideo) ?? throw new ArgumentException("Error al subir el video");
 
-                // Mapear el video subido a un DTO con la información necesaria
-                var mappedVideo = new GetVideoDTO
-                {
-                    Id = uploadedVideo.Id.ToString(),
-                    Title = uploadedVideo.Title,
-                    Description = uploadedVideo.Description,
-                    Genre = uploadedVideo.Genre,
-                };
+            // Mapear el video subido a un DTO con la información necesaria
+            var mappedVideo = new GetVideoDTO
+            {
+                Id = uploadedVideo.Id.ToString(),
+                Title = uploadedVideo.Title,
+                Description = uploadedVideo.Description,
+                Genre = uploadedVideo.Genre,
+            };
 
-                return mappedVideo;
-            } else{
-                throw new ArgumentException("El video no puede ser nulo");
-            }
+            return mappedVideo;
         }
     }
 }

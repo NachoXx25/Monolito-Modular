@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Monolito_Modular.Application.DTOs;
 
 namespace Monolito_Modular.Application.Services.Interfaces
@@ -20,7 +16,7 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// </summary>
         /// <param name="id">El id del video a obtener</param>
         /// <returns>El video buscado</returns>
-        Task<GetVideoDTO> GetVideoById(string id);
+        Task<GetVideoDTO?> GetVideoById(string id);
 
         /// <summary>
         /// Método que permite actualizar un video por su id
@@ -42,6 +38,6 @@ namespace Monolito_Modular.Application.Services.Interfaces
         /// </summary>
         /// <param name="search">Filtro opcional por género o título</param>
         /// <returns>Listado de todos los videos según el filtrado</returns>
-        Task<GetVideoDTO[]> GetAllVideos(VideoSearch? search);
+        Task<GetVideoDTO[]?> GetAllVideos(VideoSearchDTO? search);
     }
 }
