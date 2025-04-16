@@ -32,15 +32,24 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                     try {
                         await userContext.Database.MigrateAsync();
                     }
-                        catch (PostgresException ex) when (ex.SqlState == "42P07") {
-                            logger.LogWarning("Algunas tablas ya existen en la base de datos PostgreSQL: {Message}", ex.Message);
+                        catch (MySqlException ex) when (ex.SqlState == "42P07") {
+                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
                     }
                     
                     try {
                         await authContext.Database.MigrateAsync();
                     }
-                        catch (MySqlException ex) when (ex.Message.Contains("already exists")) {
-                            logger.LogWarning("Algunas tablas ya existen en la base de datos MySQL: {Message}", ex.Message);
+                    catch (PostgresException ex) when (ex.SqlState == "42P07") {
+                        logger.LogWarning("Algunas tablas ya existen en la base de datos PostgreSQL: {Message}", ex.Message);
+                    }
+                    catch (PostgresException ex) when (ex.SqlState == "42501") {
+                        // 42501 es el código de error para permisos denegados
+                        logger.LogError("Error de permisos en PostgreSQL. Asegúrate de que tu usuario tenga los permisos necesarios: {Message}", ex.Message);
+                        throw; // Lanzar el error para que la aplicación no continúe
+                    }
+                    catch (Exception ex) {
+                        logger.LogError("Error general con PostgreSQL: {Message}", ex.Message);
+                        throw; // Lanzar el error para que la aplicación no continúe
                     }
                     try {
                         await billContext.Database.MigrateAsync();
@@ -187,7 +196,6 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                 catch(Exception ex)
                 {
                     logger.LogError(ex, "Un error ha ocurrido mientras se cargaban los seeders");
-                    throw;
                 }
             }
         }

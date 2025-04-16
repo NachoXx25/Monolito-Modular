@@ -45,13 +45,28 @@ builder.Services.AddDbContextPool<UserContext>(options =>
         mySqlOptions => 
         {
             mySqlOptions.MigrationsAssembly(typeof(UserContext).Assembly.FullName);
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null
+            );
         });
 }, poolSize: 200);
 
 //Conexión a base de datos de módulo de autenticación (PostgreSQL)
-builder.Services.AddDbContext<AuthContext>(options => 
-    options.UseNpgsql(Env.GetString("POSTGRESQL_CONNECTION")));
-
+builder.Services.AddDbContext<AuthContext>(options =>
+    options.UseNpgsql(
+        Env.GetString("POSTGRESQL_CONNECTION"),
+        npgsqlOptions => 
+        {
+            npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "MonolitoPostgreSQL_mightynear");
+            npgsqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5, 
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorCodesToAdd: null);
+            npgsqlOptions.CommandTimeout(30);
+        }
+    ));
 //Conexión a base de datos de módulo de facturas (MariaDB)
 builder.Services.AddDbContext<BillContext>(options => 
     options.UseMySql(Env.GetString("MARIADB_CONNECTION"),serverVersion));
