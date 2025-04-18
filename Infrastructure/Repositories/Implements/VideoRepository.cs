@@ -35,11 +35,26 @@ namespace Monolito_Modular.Infrastructure.Repositories.Implements
         /// <summary>
         /// Obtiene todos los videos no eliminados de la base de datos
         /// </summary>
+        /// <param name="search">Filtro opcional por género, título o ambos al mismo tiempo</param>
         /// <returns>Listado de todos los videos</returns>
-        public async Task<Video[]> GetAllVideos()
+        public async Task<Video[]> GetAllVideos(VideoSearchDTO? search)
         {
             //Obtenemos todos los videos no eliminados de la base de datos
-            return await _context.Videos.AsNoTracking().Where(v => !v.IsDeleted).ToArrayAsync();
+            var videos = _context.Videos.AsQueryable();
+            videos = videos.Where(v => !v.IsDeleted);
+
+            //Filtramos por genero o titulo si se proporciona el filtro
+            if(!string.IsNullOrWhiteSpace(search?.Title))
+            {
+                videos = videos.Where(v => v.Title.ToLower().Contains(search.Title.ToLower()));
+            }
+            if(!string.IsNullOrWhiteSpace(search?.Genre))
+            {
+                videos = videos.Where(v => v.Genre.ToLower().Contains(search.Genre.ToLower()));
+            }
+            
+            //Retornamos los videos filtrados
+            return await videos.ToArrayAsync();
         }
 
         /// <summary>

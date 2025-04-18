@@ -37,6 +37,6 @@ namespace Monolito_Modular.Infrastructure.Repositories.Interfaces
         /// Obtiene todos los videos de la base de datos
         /// </summary>
         /// <returns>Listado de todos los videos</returns>
-        Task<Video[]> GetAllVideos();
+        Task<Video[]> GetAllVideos(VideoSearchDTO? search);
     }
 }
