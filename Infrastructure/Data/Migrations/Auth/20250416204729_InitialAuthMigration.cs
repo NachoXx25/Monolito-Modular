@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Monolito_Modular.Infrastructure.Data.Migrations.Auth
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialAuthMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

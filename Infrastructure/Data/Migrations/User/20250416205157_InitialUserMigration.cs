@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Monolito_Modular.Migrations
+namespace Monolito_Modular.Infrastructure.Data.Migrations.User
 {
     /// <inheritdoc />
     public partial class InitialUserMigration : Migration

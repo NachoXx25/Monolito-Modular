@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "6027bf77-11d9-4efe-b539-49edb0cb2ebb",
+		"_postman_id": "7836eca5-8ca4-4343-b298-c01f7fb994d0",
 		"name": "Monolito Modular",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30508365"
+		"_exporter_id": "33657530"
 	},
 	"item": [
 		{
@@ -631,6 +631,288 @@
 			]
 		},
 		{
+			"name": "Flow 1",
+			"item": [
+				{
+					"name": "Get All Videos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos"
+							],
+							"query": [
+								{
+									"key": "Title",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "Genre",
+									"value": "Acción",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var req = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"pm.environment.set(\"email_flow_1\", req.email);\r",
+									"pm.environment.set(\"password_flow_1\", req.password);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"Arturo\",\r\n  \"lastName\": \"Prat\",\r\n  \"email\": \"Prat@gmail.com\",\r\n  \"password\": \"Prat1234\",\r\n  \"confirmPassword\": \"Prat1234\",\r\n  \"role\": \"Cliente\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usuarios",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as Costumer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"token_flow_1\", res.token.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email_flow_1}}\",\r\n  \"password\": \"{{password_flow_1}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Video By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_flow_1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/videos/67f82507533ee5f9a582f772",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"videos",
+								"67f82507533ee5f9a582f772"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flow 2",
+			"item": [
+				{
+					"name": "Login as Administrator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"token_flow_2\", res.token.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"juana@gmail.com\",\r\n  \"password\": \"Password123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Bills by Administrator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_flow_2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/facturas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturas"
+							],
+							"query": [
+								{
+									"key": "StatusName",
+									"value": "Pagado",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updaten Bill Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_flow_2}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"Pagado\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/facturas/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"facturas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Flow 3",
 			"item": [
 				{
@@ -654,7 +936,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"Akeem.Bradtke11@yahoo.com\",\r\n  \"password\": \"Password123!\"\r\n}",
+							"raw": "{\r\n  \"email\": \"juana@gmail.com\",\r\n  \"password\": \"Password123!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -790,7 +1072,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"BURLEY_BERGNAUM36@HOTMAIL.COM\",\r\n  \"password\": \"Password1234\"\r\n}",
+							"raw": "{\r\n  \"email\": \"juan@gmail.com\",\r\n  \"password\": \"Password123!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -146,7 +146,7 @@ namespace Monolito_Modular.Application.Services.Implements
         /// <returns>Lista de usuarios</returns>
         public async Task<IEnumerable<UserDTO>> GetAllUsers(SearchByDTO search)
         {
-            var users = _userManager.Users.AsQueryable();
+            var users = _userManager.Users.OrderBy( u => u.Id).AsQueryable();
             if(!string.IsNullOrWhiteSpace(search.FirstName))
             {
                 users = users.Where(x => x.FirstName.ToLower().Contains(search.FirstName.ToLower()));
@@ -161,7 +161,7 @@ namespace Monolito_Modular.Application.Services.Implements
             }
             if(users.Count() == 0) throw new Exception("No se encontraron usuarios con los parámetros de búsqueda especificados.");
             var pacificTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time");
-            return await users.Where( u => u.Status == true).Select(user => new UserDTO()
+            return await users.Where(u => u.Status == true).Select(user => new UserDTO()
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
