@@ -32,9 +32,9 @@ namespace Monolito_Modular.Application.Services.Implements
         public async Task<GetVideoDTO[]?> GetAllVideos(VideoSearchDTO? search)
         {
             // Obtener todos los videos
-            var videos = await _videoRepository.GetAllVideos();
+            var videos = await _videoRepository.GetAllVideos(search);
 
-            if (videos == null)
+            if (videos == null || videos.Length == 0)
             {
                 return null;
             }
@@ -47,18 +47,6 @@ namespace Monolito_Modular.Application.Services.Implements
                 Description = video.Description,
                 Genre = video.Genre,
             }).ToArray();
-
-            // Filtrar los videos según título
-            if(!string.IsNullOrWhiteSpace(search?.Title))
-            {
-                mappedVideos = mappedVideos.Where(video => video.Title.Contains(search.Title, StringComparison.OrdinalIgnoreCase)).ToArray();
-            }
-
-            // Filtrar los videos según género
-            if(!string.IsNullOrWhiteSpace(search?.Genre))
-            {
-                mappedVideos = mappedVideos.Where(video => video.Genre.Contains(search.Genre, StringComparison.OrdinalIgnoreCase)).ToArray();
-            }
 
             return mappedVideos;
         }

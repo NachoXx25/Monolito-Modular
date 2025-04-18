@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Monolito_Modular.Domain.BillModel;
@@ -11,6 +7,7 @@ using Npgsql;
 using Monolito_Modular.Infrastructure.Data.DataContexts;
 using Bogus;
 using Monolito_Modular.Domain.VideoModel;
+using MongoDB.Bson;
 
 namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 {
@@ -185,6 +182,20 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
 
                     if(!await videoContext.Videos.AnyAsync())
                     {
+
+                        var specificId = new ObjectId("507f1f77bcf86cd799439011");
+
+                        var video = new Video
+                        {
+                            Id = specificId,
+                            Title = "Video de prueba",
+                            Description = "Descripción de prueba",
+                            Genre = "Acción",
+                            IsDeleted = false
+                        };
+
+                        videoContext.Videos.Add(video);
+
                         var faker = new Faker<Video>()
                             .RuleFor(v => v.Title, f => f.Lorem.Sentence(3))
                             .RuleFor(v => v.Description, f => f.Lorem.Paragraph(2))
