@@ -270,14 +270,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/auth/usuarios/7",
+							"raw": "{{url}}/auth/usuarios/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"auth",
 								"usuarios",
-								"7"
+								"1"
 							]
 						}
 					},
@@ -771,13 +771,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/videos/67f82507533ee5f9a582f772",
+							"raw": "{{url}}/videos/507f1f77bcf86cd799439011",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"videos",
-								"67f82507533ee5f9a582f772"
+								"507f1f77bcf86cd799439011"
 							]
 						}
 					},
@@ -874,7 +874,7 @@
 					"response": []
 				},
 				{
-					"name": "Updaten Bill Status",
+					"name": "Update Bill Status",
 					"request": {
 						"auth": {
 							"type": "bearer",
