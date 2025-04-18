@@ -20,7 +20,7 @@ namespace Monolito_Modular.Application.Services.Implements
         {
             {"DuplicateUserName", "El nombre de usuario ya está en uso"},
             {"DuplicateEmail", "El correo electrónico ya está registrado"},
-            //{"InvalidUserName", "El nombre de usuario contiene caracteres inválidos"}
+            {"InvalidUserName", "El nombre de usuario contiene caracteres inválidos"}
         };
         public UserService(UserManager<User> userManager, RoleManager<Role> roleManager, IUserRepository userRepository, IServiceProvider serviceProvider)
         {
@@ -200,6 +200,7 @@ namespace Monolito_Modular.Application.Services.Implements
                 hasChanges = true;
             }
             user.UpdatedAt = DateTime.UtcNow;
+            user.SecurityStamp = Guid.NewGuid().ToString();
             if(!hasChanges) throw new Exception("Debe modificar al menos un campo.");
             var role = await _roleManager.FindByIdAsync(user.RoleId.ToString()) ?? throw new Exception("Error en el sistema, vuelva a intentarlo más tarde.");
             await _userManager.UpdateAsync(user);
