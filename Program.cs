@@ -47,9 +47,10 @@ builder.Services.AddDbContextPool<UserContext>(options =>
             mySqlOptions.MigrationsAssembly(typeof(UserContext).Assembly.FullName);
             mySqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(30),
+                maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorNumbersToAdd: null
             );
+            mySqlOptions.CommandTimeout(60);
         });
 }, poolSize: 200);
 
@@ -62,14 +63,24 @@ builder.Services.AddDbContext<AuthContext>(options =>
             npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "MonolitoPostgreSQL_mightynear");
             npgsqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5, 
-                maxRetryDelay: TimeSpan.FromSeconds(30),
+                maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorCodesToAdd: null);
-            npgsqlOptions.CommandTimeout(30);
+            npgsqlOptions.CommandTimeout(60);
         }
     ));
 //Conexión a base de datos de módulo de facturas (MariaDB)
 builder.Services.AddDbContext<BillContext>(options => 
-    options.UseMySql(Env.GetString("MARIADB_CONNECTION"),serverVersion));
+    options.UseMySql(Env.GetString("MARIADB_CONNECTION"), serverVersion, 
+        mySqlOptions => 
+        {
+            mySqlOptions.MigrationsAssembly(typeof(BillContext).Assembly.FullName);
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(60),
+                errorNumbersToAdd: null
+            );
+            mySqlOptions.CommandTimeout(60);
+        }));
 
 //Conexión a base de datos de módulo de videos (MongoDB)
 builder.Services.AddDbContext<VideoContext>(options => 
