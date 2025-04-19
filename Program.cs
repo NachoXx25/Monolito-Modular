@@ -50,7 +50,7 @@ builder.Services.AddDbContextPool<UserContext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorNumbersToAdd: null
             );
-            mySqlOptions.CommandTimeout(60);
+            mySqlOptions.CommandTimeout(120);
         });
 }, poolSize: 200);
 
@@ -65,7 +65,7 @@ builder.Services.AddDbContext<AuthContext>(options =>
                 maxRetryCount: 5, 
                 maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorCodesToAdd: null);
-            npgsqlOptions.CommandTimeout(60);
+            npgsqlOptions.CommandTimeout(120);
         }
     ));
 //Conexión a base de datos de módulo de facturas (MariaDB)
@@ -79,7 +79,7 @@ builder.Services.AddDbContext<BillContext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorNumbersToAdd: null
             );
-            mySqlOptions.CommandTimeout(60);
+            mySqlOptions.CommandTimeout(120);
         }));
 
 //Conexión a base de datos de módulo de videos (MongoDB)
