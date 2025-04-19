@@ -225,7 +225,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"BURLEY_BERGNAUM36@HOTMAIL.COM\",\r\n  \"password\": \"Password12345\"\r\n}",
+							"raw": "{\r\n  \"email\": \"juana@gmail.com\",\r\n  \"password\": \"Password123!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

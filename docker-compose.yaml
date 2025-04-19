@@ -1,0 +1,5 @@
+services: 
+  api: 
+    image: "thenachoxx/monolito-deploy"
+    ports: 
+      - "3000:8080"

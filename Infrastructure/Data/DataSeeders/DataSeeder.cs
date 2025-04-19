@@ -40,7 +40,6 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                         logger.LogWarning("Algunas tablas ya existen en la base de datos PostgreSQL: {Message}", ex.Message);
                     }
                     catch (PostgresException ex) when (ex.SqlState == "42501") {
-                        // 42501 es el código de error para permisos denegados
                         logger.LogError("Error de permisos en PostgreSQL. Asegúrate de que tu usuario tenga los permisos necesarios: {Message}", ex.Message);
                         throw; // Lanzar el error para que la aplicación no continúe
                     }
@@ -148,6 +147,40 @@ namespace Monolito_Modular.Infrastructure.Data.DataSeeders
                         }));
                         await billContext.SaveChangesAsync();
                     };
+                    if(!await authContext.Users.AnyAsync())
+                    {
+                        authContext.Users.AddRange(userContext.Users.Select(u => new User
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            NormalizedUserName = u.NormalizedUserName,
+                            Email = u.Email,
+                            NormalizedEmail = u.NormalizedEmail,
+                            PasswordHash = u.PasswordHash,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Status = u.Status,
+                            RoleId = u.RoleId
+                        }));
+                        await authContext.SaveChangesAsync();
+                    }
+                    if(!await billContext.Users.AnyAsync())
+                    {
+                        billContext.Users.AddRange(userContext.Users.Select(u => new User
+                        {
+                            Id = u.Id,
+                            UserName = u.UserName,
+                            NormalizedUserName = u.NormalizedUserName,
+                            Email = u.Email,
+                            NormalizedEmail = u.NormalizedEmail,
+                            PasswordHash = u.PasswordHash,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Status = u.Status,
+                            RoleId = u.RoleId
+                        }));
+                        await billContext.SaveChangesAsync();
+                    }
                     var statuses = new[] { "Pendiente", "Pagado", "Vencido" };
                     
                     if(!await billContext.Statuses.AnyAsync())
