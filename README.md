@@ -31,6 +31,17 @@ dotnet restore
 cp .env.example .env
 ```
 
+In the ```.env``` file, replace:
+
+- ```your_jwt_secret_key``` with your JWT secret key
+- ```your_db``` with the name of each database (except for MongoDB)
+- ```your_user```,```your_password``` with the credentials for each database
+- ```mysql_port```, ```mariadb_port```, ```postgresql_port```, ```mongodb_port``` with the port for each database
+- ```your_mongodb_db_name``` with your MongoDB database name
+
+Once you have replaced everything, save the changes and move on to the next step.
+
+
 5. **Run the project**
 ```bash
 dotnet run
